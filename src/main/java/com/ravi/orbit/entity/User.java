@@ -18,7 +18,8 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"addresses", "usedCoupons"})
+//@EqualsAndHashCode(exclude = {"addresses", "usedCoupons"})
+@EqualsAndHashCode(exclude = {"usedCoupons"})
 public class User {
 
     @Id

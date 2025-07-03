@@ -3,7 +3,6 @@ package com.ravi.orbit.service;
 import com.ravi.orbit.dto.SellerDto;
 import com.ravi.orbit.entity.Seller;
 import com.ravi.orbit.repository.SellerRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

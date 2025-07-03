@@ -8,6 +8,7 @@ import com.ravi.orbit.repository.ProductRepository;
 import com.ravi.orbit.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,6 +48,11 @@ public class ProductService {
         return productRepository.save(mapToExistingProductEntity(id, productDto));
     }
 
+    public Page<ProductPublicResponseDto> getAllPaginated(int pageNumber, int pageSize) {
+        return productRepository.findAll(org.springframework.data.domain.PageRequest.of(pageNumber, pageSize))
+                .map(this::mapToProductPublicResponseDto);
+    }
+
     public List<ProductPublicResponseDto> getAll(){
         List<Product> products = productRepository.findAll();
         return products.stream()
@@ -67,12 +73,16 @@ public class ProductService {
         return productRepository.findByProductId(productId);
     }
 
-    public List<Product> findByName(String name){
-        return productRepository.findByName(name);
+    public List<ProductPublicResponseDto> findByName(String name){
+        List<Product> products = productRepository.findByName(name);
+        return products.stream()
+                .map(this::mapToProductPublicResponseDto).toList();
     }
 
-    public List<Product> findByCategory(Long categoryId) {
-        return productRepository.findByCategory_Id(categoryId);
+    public List<ProductPublicResponseDto> findByCategory(Long categoryId) {
+        List<Product> products = productRepository.findByCategory_Id(categoryId);
+        return products.stream()
+                .map(this::mapToProductPublicResponseDto).toList();
     }
 
     public boolean deleteProductById(Long id) {
@@ -99,7 +109,8 @@ public class ProductService {
         product.setSize(productDto.getSize());
         product.setMarketPrice(productDto.getMarketPrice());
         product.setDiscount(productDto.getDiscount());
-        product.setSellingPrice(productDto.getSellingPrice());
+//        product.setSellingPrice(productDto.getSellingPrice());
+        product.setSellingPrice(productDto.getMarketPrice() - (productDto.getMarketPrice() * productDto.getDiscount() / 100) );
         product.setCategory(category);
         product.setSeller(seller);
 
@@ -147,23 +158,21 @@ public class ProductService {
         dto.setAvgRating(product.getAvgRating());
         dto.setCreatedAt(product.getCreatedAt().toString());
         dto.setCategoryName(product.getCategory().getName());
-        dto.setSellerName(product.getSeller().getFullName());
+//        dto.setSellerName(product.getSeller().getFullName());
         dto.setReviews(product.getReviews());
 
-//        // Map seller public info
-//        SellerPublicDto sellerDto = new SellerPublicDto();
-//        Seller seller = product.getSeller();
-//        sellerDto.setId(seller.getId());
-//        sellerDto.setFullName(seller.getFullName());
-//        sellerDto.setBusinessName(seller.getBusinessDetails().getBusinessName());
-//        sellerDto.setBusinessAddress(seller.getBusinessDetails().getBusinessAddress());
-//        sellerDto.setBusinessPhone(seller.getBusinessDetails().getBusinessPhone());
-//        sellerDto.setBusinessWebsite(seller.getBusinessDetails().getBusinessWebsite());
-//        sellerDto.setBusinessDescription(seller.getBusinessDetails().getBusinessDescription());
-//        sellerDto.setBusinessLogo(seller.getBusinessDetails().getBusinessLogo());
-//        sellerDto.setBusinessBanner(seller.getBusinessDetails().getBusinessBanner());
-//
-//        dto.setSeller(sellerDto);
+        // Map Seller to SellerPublicDto
+        Seller seller = product.getSeller();
+        if (seller != null) {
+            SellerPublicDto sellerDto = new SellerPublicDto();
+            sellerDto.setId(seller.getId());
+            sellerDto.setFullName(seller.getFullName());
+            sellerDto.setBusinessName(seller.getBusinessDetails().getBusinessName());
+            sellerDto.setBusinessPhone(seller.getBusinessDetails().getBusinessPhone());
+            sellerDto.setBusinessLogo(seller.getBusinessDetails().getBusinessLogo());
+            dto.setSeller(sellerDto);
+        }
+
 
 //        List<ReviewDto> reviewDTOs = product.getReviews().stream().map(review -> {
 //            ReviewDto r = new ReviewDto();
@@ -175,8 +184,7 @@ public class ProductService {
 //            return r;
 //        }).toList();
 //
-//        dto.setReviews(reviewDTOs);
-
+        dto.setReviews(product.getReviews());
 
         return dto;
     }

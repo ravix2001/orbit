@@ -23,8 +23,8 @@ public class ProductPublicResponseDto {
     private int numRatings;
     private double avgRating;
     private String categoryName;
-//    private SellerPublicDto seller;
-    private String sellerName;
+    private SellerPublicDto seller;
+//    private String sellerName;
     private String createdAt;
     private List<Review> reviews;
 

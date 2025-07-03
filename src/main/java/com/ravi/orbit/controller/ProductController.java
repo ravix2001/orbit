@@ -5,6 +5,7 @@ import com.ravi.orbit.dto.ProductPublicResponseDto;
 import com.ravi.orbit.entity.Product;
 import com.ravi.orbit.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,11 +21,28 @@ public class ProductController {
 
     private final ProductService productService;
 
+    /**
+     * Get paginated products
+     */
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<ProductPublicResponseDto>> getAllProductsPaginated(@RequestParam(defaultValue = "0") int page, // Default to page 0
+                                                                                  @RequestParam(defaultValue = "20") int size // Default page size is 20
+                                                                                  ){
+        Page<ProductPublicResponseDto> paginatedProducts = productService.getAllPaginated(page, size);
+        return ResponseEntity.ok(paginatedProducts);
+    }
+
+    /**
+     * Get all products
+     */
     @GetMapping()
     public ResponseEntity<List<ProductPublicResponseDto>> getAllProducts() {
         return ResponseEntity.ok(productService.getAll());
     }
 
+    /**
+     * Get product by id
+     */
     @GetMapping("/{id}")
     public ResponseEntity<ProductPublicResponseDto> getProductById(@PathVariable Long id) {
         Optional<Product> product = productService.getProductById(id);
@@ -36,19 +54,25 @@ public class ProductController {
 //        return ResponseEntity.ok(productService.getProductById(id));
 //    }
 
+    /**
+     * Get product by productId
+     */
     @GetMapping("productId/{productId}")
-    public ResponseEntity<Product> getProduct(@PathVariable String productId) {
+    public ResponseEntity<ProductPublicResponseDto> getProduct(@PathVariable String productId) {
         Optional<Product> product = productService.findByProductId(productId);
-        return product.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return product.map(value -> ResponseEntity.ok(productService.getProductPublicDto(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/productName{name}")
-    public ResponseEntity<List<Product>> getProductByName(@PathVariable String name) {
+    /**
+     * Get product by productName
+     */
+    @GetMapping("/productName/{name}")
+    public ResponseEntity<List<ProductPublicResponseDto>> getProductByName(@PathVariable String name) {
         return ResponseEntity.ok(productService.findByName(name));
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<Product>> getProductByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<List<ProductPublicResponseDto>> getProductByCategory(@PathVariable Long categoryId) {
         return ResponseEntity.ok(productService.findByCategory(categoryId));
     }
 
