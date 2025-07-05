@@ -17,7 +17,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CategoryController {
 
-//    category controller milaauna baaki xa tes paxi product controller pni check garna parxa
+//    category controller milaauna baaki xa tes paxi product controller pni check garnu parxa
 
     private final CategoryService categoryService;
 

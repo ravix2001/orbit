@@ -1,7 +1,7 @@
 package com.ravi.orbit.controller;
 
 import com.ravi.orbit.dto.ProductDto;
-import com.ravi.orbit.dto.ProductPublicResponseDto;
+import com.ravi.orbit.dto.ProductResponseDto;
 import com.ravi.orbit.entity.Product;
 import com.ravi.orbit.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -25,18 +25,18 @@ public class ProductController {
      * Get paginated products
      */
     @GetMapping("/paginated")
-    public ResponseEntity<Page<ProductPublicResponseDto>> getAllProductsPaginated(@RequestParam(defaultValue = "0") int page, // Default to page 0
-                                                                                  @RequestParam(defaultValue = "20") int size // Default page size is 20
+    public ResponseEntity<Page<ProductResponseDto>> getAllProductsPaginated(@RequestParam(defaultValue = "0") int page, // Default to page 0
+                                                                            @RequestParam(defaultValue = "20") int size // Default page size is 20
                                                                                   ){
-        Page<ProductPublicResponseDto> paginatedProducts = productService.getAllPaginated(page, size);
+        Page<ProductResponseDto> paginatedProducts = productService.getAllPaginated(page, size);
         return ResponseEntity.ok(paginatedProducts);
     }
 
     /**
      * Get all products
      */
-    @GetMapping()
-    public ResponseEntity<List<ProductPublicResponseDto>> getAllProducts() {
+    @GetMapping("/products")
+    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
         return ResponseEntity.ok(productService.getAll());
     }
 
@@ -44,9 +44,9 @@ public class ProductController {
      * Get product by id
      */
     @GetMapping("/{id}")
-    public ResponseEntity<ProductPublicResponseDto> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id) {
         Optional<Product> product = productService.getProductById(id);
-        return product.map(value -> ResponseEntity.ok(productService.getProductPublicDto(value))).orElseGet(() -> ResponseEntity.notFound().build());
+        return product.map(value -> ResponseEntity.ok(productService.getProductResponse(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 //    @GetMapping("/{id}")
@@ -57,46 +57,46 @@ public class ProductController {
     /**
      * Get product by productId
      */
-    @GetMapping("productId/{productId}")
-    public ResponseEntity<ProductPublicResponseDto> getProduct(@PathVariable String productId) {
+    @GetMapping("/productId/{productId}")
+    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable String productId) {
         Optional<Product> product = productService.findByProductId(productId);
-        return product.map(value -> ResponseEntity.ok(productService.getProductPublicDto(value))).orElseGet(() -> ResponseEntity.notFound().build());
+        return product.map(value -> ResponseEntity.ok(productService.getProductResponse(value))).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     /**
      * Get product by productName
      */
     @GetMapping("/productName/{name}")
-    public ResponseEntity<List<ProductPublicResponseDto>> getProductByName(@PathVariable String name) {
+    public ResponseEntity<List<ProductResponseDto>> getProductByName(@PathVariable String name) {
         return ResponseEntity.ok(productService.findByName(name));
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<ProductPublicResponseDto>> getProductByCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<List<ProductResponseDto>> getProductByCategory(@PathVariable Long categoryId) {
         return ResponseEntity.ok(productService.findByCategory(categoryId));
     }
 
-    @PostMapping()
-    public ResponseEntity<ProductPublicResponseDto> createProduct(@RequestBody ProductDto productDto) {
+    @PostMapping("/addProduct")
+    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductDto productDto) {
         Product newProduct = productService.saveProduct(productDto);
-        ProductPublicResponseDto productResponseDto = productService.getProductPublicDto(newProduct);
+        ProductResponseDto productResponseDto = productService.getProductResponse(newProduct);
         URI location = URI.create("/api/product/" + newProduct.getProductId());
         return ResponseEntity.created(location).body(productResponseDto);
     }
 
     // change these to id instead of productId
-    @PatchMapping("/{id}")
-    public ResponseEntity<ProductPublicResponseDto> updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
+    @PatchMapping("/updateProduct/{id}")
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
         Optional<Product> product = productService.getProductById(id);
         if (product.isPresent()) {
             Product updatedProduct = productService.updateProduct(id, productDto);
-            ProductPublicResponseDto productResponseDto = productService.getProductPublicDto(updatedProduct);
+            ProductResponseDto productResponseDto = productService.getProductResponse(updatedProduct);
             return ResponseEntity.ok(productResponseDto);
         }
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("deleteProduct/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         boolean isDeleted = productService.deleteProductById(id);
         if (isDeleted) {

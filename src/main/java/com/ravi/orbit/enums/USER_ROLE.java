@@ -1,7 +1,7 @@
 package com.ravi.orbit.enums;
 
 public enum USER_ROLE {
-    CUSTOMER,
-    SELLER,
-    ADMIN
+    ROLE_USER,
+    ROLE_SELLER,
+    ROLE_ADMIN
 }

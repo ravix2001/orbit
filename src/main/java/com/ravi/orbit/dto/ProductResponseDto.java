@@ -6,7 +6,7 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-public class ProductPublicResponseDto {
+public class ProductResponseDto {
 
     private Long id;
     private String productId;
@@ -23,7 +23,7 @@ public class ProductPublicResponseDto {
     private int numRatings;
     private double avgRating;
     private String categoryName;
-    private SellerPublicDto seller;
+    private SellerResponseDto seller;
 //    private String sellerName;
     private String createdAt;
     private List<Review> reviews;

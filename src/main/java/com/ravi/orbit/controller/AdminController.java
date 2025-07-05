@@ -20,11 +20,13 @@ public class AdminController {
 
     private final SellerService sellerService;
 
+    // Get all users
     @GetMapping("/all-users")
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAll());
     }
 
+    // Get user by Id
     @GetMapping("/user/{id}")
     public ResponseEntity<User> getUser(@PathVariable Long id) {
         Optional<User> user = userService.findById(id);

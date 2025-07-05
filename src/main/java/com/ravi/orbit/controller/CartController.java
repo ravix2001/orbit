@@ -1,6 +1,6 @@
 package com.ravi.orbit.controller;
 
-import com.ravi.orbit.dto.CartItemRequestDto;
+import com.ravi.orbit.dto.CartItemDto;
 import com.ravi.orbit.entity.Cart;
 import com.ravi.orbit.entity.Product;
 import com.ravi.orbit.service.CartService;
@@ -38,9 +38,9 @@ public class CartController {
     }
 
     @PostMapping
-    public ResponseEntity<Cart> addProductToCart(@RequestBody CartItemRequestDto cartItemRequestDto) {
+    public ResponseEntity<Cart> addProductToCart(@RequestBody CartItemDto cartItemDto) {
         try{
-            Cart updatedCart = cartService.addProductToCart(cartItemRequestDto.getUserId(), cartItemRequestDto.getProductId(), cartItemRequestDto.getQuantity());
+            Cart updatedCart = cartService.addProductToCart(cartItemDto.getUserId(), cartItemDto.getProductId(), cartItemDto.getQuantity());
             return ResponseEntity.ok(updatedCart);
         }catch (IllegalArgumentException e){
             return ResponseEntity.badRequest().body(null);

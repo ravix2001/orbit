@@ -23,6 +23,7 @@ public class Seller {
 
     private String fullName;
 
+    @Column(unique = true, nullable = false)
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -47,7 +48,7 @@ public class Seller {
     private Address pickupAddress = new Address();
 
     @Enumerated(EnumType.STRING)
-    private USER_ROLE role = USER_ROLE.SELLER;
+    private USER_ROLE role = USER_ROLE.ROLE_SELLER;
 
 //    private boolean isEmailVerified = false;
 

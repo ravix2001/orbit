@@ -1,6 +1,6 @@
 package com.ravi.orbit.service;
 
-import com.ravi.orbit.dto.ProductPublicResponseDto;
+import com.ravi.orbit.dto.ProductResponseDto;
 import com.ravi.orbit.entity.Cart;
 import com.ravi.orbit.entity.CartItem;
 import com.ravi.orbit.entity.Product;
@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +40,7 @@ public class CartService {
     public Cart addProductToCart(Long userId, Long productId, int quantity) {         // id of product not productId so using Long and not String
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("User not found!"));
         Product product = productRepository.findById(productId).orElseThrow(() -> new IllegalArgumentException("Product not found!"));
-        ProductPublicResponseDto productResponse = productService.getProductPublicDto(product);
+        ProductResponseDto productResponse = productService.getProductResponse(product);
 
         Cart cart = cartRepository.findByUserId(userId).orElseGet(() -> {
             Cart newCart = new Cart();

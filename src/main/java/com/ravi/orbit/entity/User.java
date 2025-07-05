@@ -28,6 +28,7 @@ public class User {
 
     private String fullName;
 
+    @Column(unique = true, nullable = false)
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -45,7 +46,7 @@ public class User {
     private GENDER gender;
 
     @Enumerated(EnumType.STRING)
-    private USER_ROLE role = USER_ROLE.CUSTOMER;
+    private USER_ROLE role = USER_ROLE.ROLE_USER;
 
     @Enumerated(EnumType.STRING)
     private ACCOUNT_STATUS accountStatus = ACCOUNT_STATUS.PENDING_VERIFICATION;

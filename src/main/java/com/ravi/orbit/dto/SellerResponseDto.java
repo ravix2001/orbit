@@ -3,7 +3,7 @@ package com.ravi.orbit.dto;
 import lombok.Data;
 
 @Data
-public class SellerPublicDto {
+public class SellerResponseDto {
     private Long id;
     private String fullName;
     private String businessName;

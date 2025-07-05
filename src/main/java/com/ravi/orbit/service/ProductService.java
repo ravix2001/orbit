@@ -48,15 +48,15 @@ public class ProductService {
         return productRepository.save(mapToExistingProductEntity(id, productDto));
     }
 
-    public Page<ProductPublicResponseDto> getAllPaginated(int pageNumber, int pageSize) {
+    public Page<ProductResponseDto> getAllPaginated(int pageNumber, int pageSize) {
         return productRepository.findAll(org.springframework.data.domain.PageRequest.of(pageNumber, pageSize))
-                .map(this::mapToProductPublicResponseDto);
+                .map(this::mapToProductResponse);
     }
 
-    public List<ProductPublicResponseDto> getAll(){
+    public List<ProductResponseDto> getAll(){
         List<Product> products = productRepository.findAll();
         return products.stream()
-                .map(this::mapToProductPublicResponseDto).toList();
+                .map(this::mapToProductResponse).toList();
     }
 
     public Optional<Product> getProductById(Long id){
@@ -73,16 +73,16 @@ public class ProductService {
         return productRepository.findByProductId(productId);
     }
 
-    public List<ProductPublicResponseDto> findByName(String name){
+    public List<ProductResponseDto> findByName(String name){
         List<Product> products = productRepository.findByName(name);
         return products.stream()
-                .map(this::mapToProductPublicResponseDto).toList();
+                .map(this::mapToProductResponse).toList();
     }
 
-    public List<ProductPublicResponseDto> findByCategory(Long categoryId) {
+    public List<ProductResponseDto> findByCategory(Long categoryId) {
         List<Product> products = productRepository.findByCategory_Id(categoryId);
         return products.stream()
-                .map(this::mapToProductPublicResponseDto).toList();
+                .map(this::mapToProductResponse).toList();
     }
 
     public boolean deleteProductById(Long id) {
@@ -93,8 +93,8 @@ public class ProductService {
         return false;
     }
 
-    public ProductPublicResponseDto getProductPublicDto(Product product) {
-        return mapToProductPublicResponseDto(product);
+    public ProductResponseDto getProductResponse(Product product) {
+        return mapToProductResponse(product);
     }
 
     private Product mapToProductEntity(ProductDto productDto, Category category, Seller seller) {
@@ -140,8 +140,8 @@ public class ProductService {
 
 
 
-    private ProductPublicResponseDto mapToProductPublicResponseDto(Product product) {
-        ProductPublicResponseDto dto = new ProductPublicResponseDto();
+    private ProductResponseDto mapToProductResponse(Product product) {
+        ProductResponseDto dto = new ProductResponseDto();
         dto.setId(product.getId());
         dto.setProductId(product.getProductId());
         dto.setName(product.getName());
@@ -161,16 +161,16 @@ public class ProductService {
 //        dto.setSellerName(product.getSeller().getFullName());
         dto.setReviews(product.getReviews());
 
-        // Map Seller to SellerPublicDto
+        // Map Seller to SellerResponse
         Seller seller = product.getSeller();
         if (seller != null) {
-            SellerPublicDto sellerDto = new SellerPublicDto();
-            sellerDto.setId(seller.getId());
-            sellerDto.setFullName(seller.getFullName());
-            sellerDto.setBusinessName(seller.getBusinessDetails().getBusinessName());
-            sellerDto.setBusinessPhone(seller.getBusinessDetails().getBusinessPhone());
-            sellerDto.setBusinessLogo(seller.getBusinessDetails().getBusinessLogo());
-            dto.setSeller(sellerDto);
+            SellerResponseDto sellerResponse = new SellerResponseDto();
+            sellerResponse.setId(seller.getId());
+            sellerResponse.setFullName(seller.getFullName());
+            sellerResponse.setBusinessName(seller.getBusinessDetails().getBusinessName());
+            sellerResponse.setBusinessPhone(seller.getBusinessDetails().getBusinessPhone());
+            sellerResponse.setBusinessLogo(seller.getBusinessDetails().getBusinessLogo());
+            dto.setSeller(sellerResponse);
         }
 
 
