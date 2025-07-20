@@ -1,12 +1,15 @@
 package com.ravi.orbit.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.security.SecureRandom;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Component
 public class OtpUtil {
 
     private static final int OTP_LENGTH = 6;
-    private static final int EXPIRATION_TIME_MINUTES = 5;
+    private static final int EXPIRATION_TIME_MINUTES = 1;
     private static final SecureRandom secureRandom = new SecureRandom();
     private static final ConcurrentHashMap<String, OtpEntry> otpStore = new ConcurrentHashMap<>();
 

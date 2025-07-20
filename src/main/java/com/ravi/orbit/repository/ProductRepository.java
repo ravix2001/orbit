@@ -19,4 +19,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 //    The _ (underscore) lets Spring Data JPA traverse into the category field and use its id.
     List<Product> findByCategory_Id(Long categoryId);
 
+    List<Product> findBySeller_Username(String username);
+
 }

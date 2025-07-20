@@ -9,6 +9,8 @@ import com.ravi.orbit.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,21 +25,20 @@ public class ProductService {
     private final CategoryService categoryService;
 
     private final SellerService sellerService;
-    private final UserRepository userRepository;
 
     public Product saveProduct(ProductDto productDto) {
         Optional<Category> categoryOpt = categoryService.getCategoryById(productDto.getCategoryId());
-        Optional<Seller> sellerOpt = sellerService.getSellerById(productDto.getSellerId());
+//        Optional<Seller> sellerOpt = sellerService.getSellerById(productDto.getSellerId());
 
         if (categoryOpt.isEmpty()) {
             throw new EntityNotFoundException("Category with id = " + productDto.getCategoryId() + "not found");
         }
 
-        if (sellerOpt.isEmpty()) {
-            throw new EntityNotFoundException("Seller with id = " + productDto.getSellerId() + "not found");
-        }
+//        if (sellerOpt.isEmpty()) {
+//            throw new EntityNotFoundException("Seller with id = " + productDto.getSellerId() + "not found");
+//        }
 
-        return productRepository.save(mapToProductEntity(productDto, categoryOpt.get(), sellerOpt.get()));
+        return productRepository.save(mapToProductEntity(productDto, categoryOpt.get()));
     }
 
     public void saveProduct(Product product) {
@@ -63,10 +64,10 @@ public class ProductService {
         return productRepository.findById(id);
     }
 
-//    public ProductPublicResponseDto getProductById(Long id) {
+//    public ProductResponseDto getProductById(Long id) {
 //        Product product = productRepository.findById(id)
 //                .orElseThrow(() -> new RuntimeException("Product not found"));
-//        return mapToProductPublicResponseDto(product);
+//        return mapToProductResponse(product);
 //    }
 
     public Optional<Product> findByProductId(String productId) {
@@ -85,6 +86,12 @@ public class ProductService {
                 .map(this::mapToProductResponse).toList();
     }
 
+    public List<ProductResponseDto> findBySeller(String username) {
+        List<Product> products = productRepository.findBySeller_Username(username);
+        return products.stream()
+                .map(this::mapToProductResponse).toList();
+    }
+
     public boolean deleteProductById(Long id) {
         if (productRepository.existsById(id)) {
             productRepository.deleteById(id);
@@ -97,7 +104,11 @@ public class ProductService {
         return mapToProductResponse(product);
     }
 
-    private Product mapToProductEntity(ProductDto productDto, Category category, Seller seller) {
+    private Product mapToProductEntity(ProductDto productDto, Category category) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        Seller seller = sellerService.findByUsername(username);
+
         Product product = new Product();
         product.setProductId(productDto.getProductId());
         product.setName(productDto.getName());

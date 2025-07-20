@@ -40,7 +40,7 @@ public class User {
     private String phone;
 
     @OneToOne(cascade = CascadeType.ALL)
-    private Address deliveryAddress = new Address();
+    private Address address = new Address();
 
     @Enumerated(EnumType.STRING)
     private GENDER gender;

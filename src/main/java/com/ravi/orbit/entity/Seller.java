@@ -27,7 +27,7 @@ public class Seller {
     private String username;
 
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @JsonIgnore
+//    @JsonIgnore
     private String password;
 
     @Column(unique = true, nullable = false)
@@ -45,7 +45,7 @@ public class Seller {
     private String pan;     // PAN => Personal Account Number
 
     @OneToOne(cascade = CascadeType.ALL)
-    private Address pickupAddress = new Address();
+    private Address address = new Address();
 
     @Enumerated(EnumType.STRING)
     private USER_ROLE role = USER_ROLE.ROLE_SELLER;

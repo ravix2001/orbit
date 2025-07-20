@@ -6,6 +6,8 @@ import com.ravi.orbit.service.SellerService;
 import com.ravi.orbit.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,21 @@ public class AdminController {
 
     private final SellerService sellerService;
 
+    /**
+     * creating existing user an admin
+     */
+    @PostMapping("/create-admin/{id}")
+    public ResponseEntity<String> createAdmin(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.addAdmin(id));
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<User> getAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+        return ResponseEntity.ok(user);
+    }
     // Get all users
     @GetMapping("/all-users")
     public ResponseEntity<List<User>> getAllUsers() {

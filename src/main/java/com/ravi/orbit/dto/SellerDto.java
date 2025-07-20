@@ -25,6 +25,6 @@ public class SellerDto {
 
     private String pan;     // PAN => Personal Account Number
 
-    private Address pickupAddress;
+    private Address address;
 
 }

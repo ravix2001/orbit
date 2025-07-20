@@ -59,7 +59,7 @@ public class SellerService {
         seller.setBusinessDetails(sellerDto.getBusinessDetails());
         seller.setBankDetails(sellerDto.getBankDetails());
         seller.setPan(sellerDto.getPan());
-        seller.setPickupAddress(sellerDto.getPickupAddress());
+        seller.setAddress(sellerDto.getAddress());
 
         // Save user to the database
         return sellerRepository.save(seller);
@@ -93,12 +93,16 @@ public class SellerService {
         if (sellerDto.getPan() != null) {
             existingSeller.setPan(sellerDto.getPan());
         }
-        if (sellerDto.getPickupAddress() != null) {
-            existingSeller.setPickupAddress(sellerDto.getPickupAddress());
+        if (sellerDto.getAddress() != null) {
+            existingSeller.setAddress(sellerDto.getAddress());
         }
 
         return sellerRepository.save(existingSeller);
 
+    }
+
+    public void deleteByUsername(String username) {
+        sellerRepository.deleteByUsername(username);
     }
 
 //    public boolean deleteSellerById(Long id) {

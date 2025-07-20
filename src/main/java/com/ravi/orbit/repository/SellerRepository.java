@@ -9,4 +9,6 @@ public interface SellerRepository extends JpaRepository <Seller, Long> {
 
     Seller findByEmail(String email);
 
+    void deleteByUsername(String username);
+
 }

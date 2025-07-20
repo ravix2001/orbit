@@ -1,5 +1,6 @@
 package com.ravi.orbit.config;
 
+import com.ravi.orbit.filter.JwtFilter;
 import com.ravi.orbit.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,25 +23,25 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
 
-//    private final JwtFilter jwtFilter;
+    private final JwtFilter jwtFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/cart/**", "/api/user/**").authenticated()
+                        .requestMatchers("/api/cart/**", "/api/user/**", "/api/email-verification/**").authenticated()
                         .requestMatchers("/admin/**", "/api/category/**").hasRole("ADMIN")
                         .requestMatchers("/api/seller/**", "/api/product/addProduct", "/api/product/updateProduct/", "/api/product/deleteProduct/").hasRole("SELLER")
                         .anyRequest().permitAll()
                 )
                 .csrf(csrf -> csrf.disable())  // For testing purposes. In production, you might want to enable it
 
-                // for httpBasicAuthentication
-                .httpBasic(Customizer.withDefaults());
+//                // for httpBasicAuthentication
+//                .httpBasic(Customizer.withDefaults());
 
                 // for jwtAuthentication
-//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

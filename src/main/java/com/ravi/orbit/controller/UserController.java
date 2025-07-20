@@ -35,6 +35,7 @@ public class UserController {
         return ResponseEntity.ok(updatedUser);
     }
 
+    // to be fixed later
     @DeleteMapping("/delete-profile")
     public ResponseEntity<Void> deleteUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

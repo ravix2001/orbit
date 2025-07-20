@@ -40,7 +40,7 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User saveNewUser(UserDto userDto) throws Exception{
+    public User saveNewUser(UserDto userDto) {
         String username = userDto.getUsername();
         User userWithUsername = userRepository.findByUsername(username);
         Seller sellerWithUsername = sellerRepository.findByUsername(username);
@@ -65,6 +65,18 @@ public class UserService {
         cartRepository.save(newCart);
 
         return savedUser;
+    }
+
+    public String addAdmin(Long userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if (user.isEmpty()) {
+            return "User not found";
+        }
+        User existingUser = user.get();
+        existingUser.setRole(USER_ROLE.ROLE_ADMIN);
+        userRepository.save(existingUser);
+        return existingUser.getUsername() + " is added as admin";
+
     }
 
     public User saveExistingUser(String username, UserDto userDto){
@@ -104,7 +116,7 @@ public class UserService {
         newUser.setUsername(userDto.getUsername());
         newUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
 //        newUser.setRole(USER_ROLE.CUSTOMER);
-        newUser.setDeliveryAddress(userDto.getDeliveryAddress());
+        newUser.setAddress(userDto.getAddress());
 
         return newUser;
     }
@@ -131,8 +143,8 @@ public class UserService {
         if (userDto.getPassword() != null) {
             existingUser.setPassword(passwordEncoder.encode(userDto.getPassword()));
         }
-        if (userDto.getDeliveryAddress() != null) {
-            existingUser.setDeliveryAddress(userDto.getDeliveryAddress());
+        if (userDto.getAddress() != null) {
+            existingUser.setAddress(userDto.getAddress());
         }
 
         return existingUser;
