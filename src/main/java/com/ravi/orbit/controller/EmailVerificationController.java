@@ -21,12 +21,6 @@ public class EmailVerificationController {
     @PostMapping("/send-verification-email")
     public ResponseEntity<String> sendVerificationEmail(@RequestParam String email) {
         try {
-
-            // just trying to get the email from the logged in user
-//            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//            String username = authentication.getName();
-//            User user = userRepository.findByUsername(username);
-//            String email = user.getEmail();
             emailVerificationService.sendVerificationEmail(email);
             return ResponseEntity.ok("Verification email sent to " + email);
         } catch (IllegalArgumentException e) {

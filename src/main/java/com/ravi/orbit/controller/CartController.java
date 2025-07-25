@@ -17,7 +17,7 @@ public class CartController {
 
     private final CartService cartService;
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<Cart> getCart(@PathVariable Long userId) {
         Optional<Cart> cart = cartService.findByUserId(userId);
         if (cart.isPresent()) {
@@ -58,7 +58,7 @@ public class CartController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping("/{userId}")
     public ResponseEntity<Void> clearCart(@PathVariable Long userId) {
         boolean isCleared = cartService.clearCart(userId);
         if(isCleared){

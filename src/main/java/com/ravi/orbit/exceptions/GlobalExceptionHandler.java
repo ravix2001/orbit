@@ -1,6 +1,5 @@
 package com.ravi.orbit.exceptions;
 
-import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,12 +16,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<Map<String, String>> handleExpiredJwtException(ExpiredJwtException e) {
-        log.error("Token expired: {}", e.getMessage());
+    @ExceptionHandler(ExpiredTokenException.class)
+    public ResponseEntity<Map<String, String>> handleExpiredToken(ExpiredTokenException e) {
         return ResponseEntity.status(401).body(Map.of("error", "Token expired"));
     }
 
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidToken(InvalidTokenException e) {
+        return ResponseEntity.status(401).body(Map.of("error", "Token invalid"));
+    }
 
-    // Add handlers for other exceptions as needed
 }
