@@ -26,7 +26,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.getAll());
     }
 
-    @PostMapping
+    @PostMapping("/addCategory")
     public ResponseEntity<Category> createCategory(@RequestBody CategoryDto categoryDto) {
         Category category = new Category();
         category.setName(categoryDto.getName());
@@ -50,7 +50,7 @@ public class CategoryController {
         return category.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping("/updateCategory/{id}")
     public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
         Category category = categoryService.getCategoryById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
@@ -69,7 +69,7 @@ public class CategoryController {
         return ResponseEntity.ok(categoryService.saveCategory(category));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deleteCategory/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         boolean isDeleted = categoryService.deleteCategoryById(id);
         if (isDeleted) {

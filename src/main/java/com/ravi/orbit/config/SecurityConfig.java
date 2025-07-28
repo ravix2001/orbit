@@ -38,7 +38,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/cart/**", "/api/user/**", "/api/email-verification/**").authenticated()
-                        .requestMatchers("/admin/**", "/api/category/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**", "/api/category/addCategory", "/api/category/updateCategory", "/api/category/deleteCategory").hasRole("ADMIN")
                         .requestMatchers("/api/seller/**", "/api/product/addProduct", "/api/product/updateProduct/", "/api/product/deleteProduct/").hasRole("SELLER")
                         .anyRequest().permitAll()
                 )
