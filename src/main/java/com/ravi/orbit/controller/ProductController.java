@@ -7,6 +7,7 @@ import com.ravi.orbit.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -71,12 +72,14 @@ public class ProductController {
     }
 
     @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<ProductResponseDto>> getProductByCategory(@PathVariable Long categoryId) {
-        return ResponseEntity.ok(productService.findByCategory(categoryId));
+    public ResponseEntity<List<ProductResponseDto>> getProductByCategory(@PathVariable Long categoryId, @RequestParam(defaultValue = "0") int page, // Default to page 0
+                                                                         @RequestParam(defaultValue = "20") int size // Default page size is 20
+    ) {
+        return ResponseEntity.ok(productService.findByCategory(categoryId, page, size));
     }
 
     @PostMapping("/addProduct")
-    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody ProductDto productDto) {
+    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody @Validated ProductDto productDto) {
         Product newProduct = productService.saveProduct(productDto);
         ProductResponseDto productResponseDto = productService.getProductResponse(newProduct);
         URI location = URI.create("/api/product/" + newProduct.getProductId());

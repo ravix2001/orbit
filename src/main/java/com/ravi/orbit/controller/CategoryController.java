@@ -1,6 +1,5 @@
 package com.ravi.orbit.controller;
 
-import com.ravi.orbit.dto.CategoryDto;
 import com.ravi.orbit.entity.Category;
 import com.ravi.orbit.service.CategoryService;
 import jakarta.persistence.EntityNotFoundException;
@@ -27,17 +26,7 @@ public class CategoryController {
     }
 
     @PostMapping("/addCategory")
-    public ResponseEntity<Category> createCategory(@RequestBody CategoryDto categoryDto) {
-        Category category = new Category();
-        category.setName(categoryDto.getName());
-        category.setLevel(categoryDto.getLevel());
-
-        if (categoryDto.getParentCategoryId() != null) {
-            Category parent = categoryService.getCategoryById(categoryDto.getParentCategoryId())
-                    .orElseThrow(() -> new EntityNotFoundException("Parent category not found"));
-            category.setParentCategory(parent);
-        }
-
+    public ResponseEntity<Category> createCategory(@RequestBody Category category) {
         Category savedCategory = categoryService.saveCategory(category);
 
         URI location = URI.create("/api/category/" + savedCategory.getId());
@@ -50,23 +39,14 @@ public class CategoryController {
         return category.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @PatchMapping("/updateCategory/{id}")
-    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody CategoryDto categoryDto) {
-        Category category = categoryService.getCategoryById(id)
+    @PutMapping("/updateCategory/{id}")
+    public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category) {
+        Category existingCategory = categoryService.getCategoryById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Category not found"));
-
-        category.setName(categoryDto.getName());
-        category.setLevel(categoryDto.getLevel());
-
-        if (categoryDto.getParentCategoryId() != null) {
-            Category parent = categoryService.getCategoryById(categoryDto.getParentCategoryId())
-                    .orElseThrow(() -> new EntityNotFoundException("Parent category not found"));
-            category.setParentCategory(parent);
-        } else {
-            category.setParentCategory(null);
+        if (category.getName() != null || !category.getName().equals("")) {
+            existingCategory.setName(category.getName());
         }
-
-        return ResponseEntity.ok(categoryService.saveCategory(category));
+        return ResponseEntity.ok(categoryService.saveCategory(existingCategory));
     }
 
     @DeleteMapping("/deleteCategory/{id}")

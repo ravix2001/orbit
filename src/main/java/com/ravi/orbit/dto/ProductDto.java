@@ -18,7 +18,7 @@ public class ProductDto {
     private Double marketPrice;    // changed from double to Double
     private Double discount;       // changed from double to Double
     private Double sellingPrice;   // changed from double to Double
-    private Long categoryId;  // reference to existing category
+    private List<Long> categoryIds;
     private Long sellerId;    // reference to existing seller
 
 }

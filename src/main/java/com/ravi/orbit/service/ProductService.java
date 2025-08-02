@@ -9,12 +9,16 @@ import com.ravi.orbit.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
@@ -26,20 +30,18 @@ public class ProductService {
 
     private final SellerService sellerService;
 
+    @Transactional
     public Product saveProduct(ProductDto productDto) {
-        Optional<Category> categoryOpt = categoryService.getCategoryById(productDto.getCategoryId());
-//        Optional<Seller> sellerOpt = sellerService.getSellerById(productDto.getSellerId());
+        List<Long> categoryIds = productDto.getCategoryIds(); // Assuming `categoryIds` is provided in ProductDto
+        List<Category> categories = categoryService.getCategoriesByIds(categoryIds); // Implement this in CategoryService
 
-        if (categoryOpt.isEmpty()) {
-            throw new EntityNotFoundException("Category with id = " + productDto.getCategoryId() + "not found");
+        if (categories.isEmpty()) {
+            throw new EntityNotFoundException("Categories with provided IDs not found");
         }
 
-//        if (sellerOpt.isEmpty()) {
-//            throw new EntityNotFoundException("Seller with id = " + productDto.getSellerId() + "not found");
-//        }
-
-        return productRepository.save(mapToProductEntity(productDto, categoryOpt.get()));
+        return productRepository.save(mapToProductEntity(productDto, categories));
     }
+
 
     public void saveProduct(Product product) {
         productRepository.save(product);
@@ -80,8 +82,8 @@ public class ProductService {
                 .map(this::mapToProductResponse).toList();
     }
 
-    public List<ProductResponseDto> findByCategory(Long categoryId) {
-        List<Product> products = productRepository.findByCategory_Id(categoryId);
+    public List<ProductResponseDto> findByCategory(Long categoryId, int pageNumber, int pageSize) {
+        List<Product> products = productRepository.findByCategories_Id(categoryId, org.springframework.data.domain.PageRequest.of(pageNumber, pageSize));
         return products.stream()
                 .map(this::mapToProductResponse).toList();
     }
@@ -104,7 +106,7 @@ public class ProductService {
         return mapToProductResponse(product);
     }
 
-    private Product mapToProductEntity(ProductDto productDto, Category category) {
+    private Product mapToProductEntity(ProductDto productDto, List<Category> categories) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         Seller seller = sellerService.findByUsername(username);
@@ -122,7 +124,7 @@ public class ProductService {
         product.setDiscount(productDto.getDiscount());
 //        product.setSellingPrice(productDto.getSellingPrice());
         product.setSellingPrice(productDto.getMarketPrice() - (productDto.getMarketPrice() * productDto.getDiscount() / 100) );
-        product.setCategory(category);
+        product.setCategories(new HashSet<>(categories)); // Creates a mutable copy
         product.setSeller(seller);
 
         return product;
@@ -168,9 +170,13 @@ public class ProductService {
         dto.setNumRatings(product.getNumRatings());
         dto.setAvgRating(product.getAvgRating());
         dto.setCreatedAt(product.getCreatedAt().toString());
-        dto.setCategoryName(product.getCategory().getName());
-//        dto.setSellerName(product.getSeller().getFullName());
         dto.setReviews(product.getReviews());
+        // Map the categories to a List<String> containing category names
+//        List<String> categoryNames = product.getCategories()
+//                .stream()
+//                .map(Category::getName)
+//                .toList();
+//        dto.setCategoryNames(categoryNames);
 
         // Map Seller to SellerResponse
         Seller seller = product.getSeller();
@@ -195,7 +201,7 @@ public class ProductService {
 //            return r;
 //        }).toList();
 //
-        dto.setReviews(product.getReviews());
+//        dto.setReviews(product.getReviews());
 
         return dto;
     }

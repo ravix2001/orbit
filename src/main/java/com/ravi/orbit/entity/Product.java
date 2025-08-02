@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -49,8 +51,14 @@ public class Product {
 
     private double avgRating;
 
-    @ManyToOne
-    private Category category;
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "product_category",
+            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
+    )
+    private Set<Category> categories;
+
 
     @ManyToOne
     private Seller seller;

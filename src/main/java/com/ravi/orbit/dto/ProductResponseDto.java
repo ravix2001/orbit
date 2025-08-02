@@ -22,7 +22,7 @@ public class ProductResponseDto {
     private double sellingPrice;
     private int numRatings;
     private double avgRating;
-    private String categoryName;
+//    private List<String> categoryNames;
     private SellerResponseDto seller;
 //    private String sellerName;
     private String createdAt;

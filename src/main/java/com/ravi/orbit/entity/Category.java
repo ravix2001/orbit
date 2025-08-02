@@ -1,11 +1,14 @@
 package com.ravi.orbit.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -21,9 +24,7 @@ public class Category {
     @Column(unique = true, nullable = false)
     private String name;
 
-    @ManyToOne
-    private Category parentCategory;
-
-    private int level;
-
+    @ManyToMany(mappedBy = "categories")
+    @JsonIgnore     // Prevents recursive serialization
+    private Set<Product> products;
 }
