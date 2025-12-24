@@ -33,9 +33,9 @@ public class SecurityConfig {
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/cart/**", "/api/user/**", "/api/email-verification/**").authenticated()
-                        .requestMatchers("/admin/**", "/api/category/addCategory", "/api/category/updateCategory", "/api/category/deleteCategory").hasRole("ADMIN")
-                        .requestMatchers("/api/seller/**", "/api/product/addProduct", "/api/product/updateProduct/", "/api/product/deleteProduct/").hasRole("SELLER")
+                        .requestMatchers("/api/cart/**", "/api/user/**", "/api/seller/**", "/api/email-verification/**").authenticated()
+                        .requestMatchers("/api/admin/**", "/api/category/**").hasRole("ADMIN")
+                        .requestMatchers("/api/product/**").hasRole("SELLER")
                         .anyRequest().permitAll()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))

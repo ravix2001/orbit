@@ -31,7 +31,7 @@ public interface SellerRepository extends JpaRepository <Seller, Long> {
             " WHERE s.username = :username ")
     Optional<SellerDTO> getSellerDTOByUsername(String username);
 
-    @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(s.username, s.password) " +
+    @Query("SELECT NEW com.ravi.orbit.dto.SellerDTO(s.username, s.password) " +
             " FROM Seller s " +
             " WHERE s.username = :username ")
     Optional<SellerDTO> getAuthByUsername(String username);

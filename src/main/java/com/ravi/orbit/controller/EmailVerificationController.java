@@ -13,14 +13,20 @@ public class EmailVerificationController {
     private final IEmailService emailService;
 
     // Send verification email
-    @PostMapping("/send-verification-email")
-    public ResponseEntity<String> sendVerificationEmail(@RequestBody String email) {
+    @GetMapping("/send-verification-email")
+    public ResponseEntity<String> sendVerificationEmail(@RequestParam String email) {
         return ResponseEntity.ok(emailService.sendVerificationEmail(email));
     }
 
     // Verify email using the token
-    @GetMapping("/verify-email")
-    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
-        return ResponseEntity.ok(emailService.verifyEmail(token));
+    @GetMapping("/verify-email-user")
+    public ResponseEntity<String> verifyEmailForUser(@RequestParam String token) {
+        return ResponseEntity.ok(emailService.verifyEmailForUser(token));
     }
+
+    @GetMapping("/verify-email-seller")
+    public ResponseEntity<String> verifyEmailForSeller(@RequestParam String token) {
+        return ResponseEntity.ok(emailService.verifyEmailForSeller(token));
+    }
+
 }

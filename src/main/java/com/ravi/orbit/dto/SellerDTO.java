@@ -14,6 +14,11 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SellerDTO {
 
+    public SellerDTO(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
     public SellerDTO(Long id, String firstName, String middleName, String lastName, String phone, String email, String username,
                      EGender gender, LocalDate dob, ERole role, EStatus status, String imgURL,
                      String address, String zipcode, String state, String countryCode, String citizenNumber, String nid, String pan) {

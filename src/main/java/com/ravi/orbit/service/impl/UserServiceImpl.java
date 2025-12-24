@@ -63,6 +63,7 @@ public class UserServiceImpl implements IUserService {
 
         userRepository.save(mapToUserEntity(user, userDTO));
         userDTO.setId(user.getId());
+        userDTO.setPassword(null);
         response.setUserDTO(userDTO);
         
         String accessToken = jwtUtil.generateJwtToken(userDTO.getPhone());
@@ -126,6 +127,7 @@ public class UserServiceImpl implements IUserService {
     public UserDTO updateUser(UserDTO userDTO, String username) {
         User user = getUserByUsername(username);
         userRepository.save(mapToUserEntity(user, userDTO));
+        userDTO.setPassword(null);
         return userDTO;
     }
 

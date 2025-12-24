@@ -35,12 +35,12 @@ public class AuthController {
         return ResponseEntity.ok(sellerService.sellerSignup(sellerDTO));
     }
 
-    @PostMapping("/userlogin")
+    @PostMapping("/userLogin")
     public ResponseEntity<AuthPayload> userLogin(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.userLoginNew(userDTO));
     }
 
-    @PostMapping("/sellerlogin")
+    @PostMapping("/sellerLogin")
     public ResponseEntity<AuthPayload> sellerLogin(@RequestBody SellerDTO sellerDTO) {
         return ResponseEntity.ok(sellerService.sellerLogin(sellerDTO));
     }

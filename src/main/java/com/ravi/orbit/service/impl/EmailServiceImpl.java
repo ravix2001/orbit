@@ -1,10 +1,13 @@
 package com.ravi.orbit.service.impl;
 
+import com.ravi.orbit.entity.Seller;
 import com.ravi.orbit.entity.User;
 import com.ravi.orbit.enums.EStatus;
 import com.ravi.orbit.exceptions.BadRequestException;
+import com.ravi.orbit.repository.SellerRepository;
 import com.ravi.orbit.repository.UserRepository;
 import com.ravi.orbit.service.IEmailService;
+import com.ravi.orbit.service.ISellerService;
 import com.ravi.orbit.service.IUserService;
 import com.ravi.orbit.utils.CommonMethods;
 import com.ravi.orbit.utils.MyConstants;
@@ -27,7 +30,9 @@ public class EmailServiceImpl implements IEmailService {
 
     private final JavaMailSender javaMailSender;
     private final IUserService userService;
+    private final ISellerService sellerService;
     private final UserRepository userRepository;
+    private final SellerRepository sellerRepository;
     private final Map<String, String> verificationTokens = new HashMap<>(); // Temporary store for tokens
 
     @Override
@@ -59,7 +64,7 @@ public class EmailServiceImpl implements IEmailService {
 
     // Verify the email using the token
     @Override
-    public String verifyEmail(String token) {
+    public String verifyEmailForUser(String token) {
         try{
             for (Map.Entry<String, String> entry : verificationTokens.entrySet()) {
                 if (entry.getValue().equals(token)) {
@@ -70,6 +75,31 @@ public class EmailServiceImpl implements IEmailService {
                         user.setStatus(EStatus.ACTIVE);
 //                    user.setVerified(true); // Assumes a 'verified' field exists in the User entity
                         userRepository.save(user);
+                    }
+
+                    // Remove token after verification
+                    verificationTokens.remove(email);
+                }
+            }
+        }catch (Exception e){
+            log.error("Error verifying email: {}", e.getMessage());
+            throw new BadRequestException("Error verifying email");
+        }
+        return "Email verified successfully";
+    }
+
+    @Override
+    public String verifyEmailForSeller(String token) {
+        try{
+            for (Map.Entry<String, String> entry : verificationTokens.entrySet()) {
+                if (entry.getValue().equals(token)) {
+                    // Mark the email as verified
+                    String email = entry.getKey();
+                    Seller seller = sellerService.getSellerByEmail(email);
+                    if (seller != null) {
+                        seller.setStatus(EStatus.ACTIVE);
+//                    user.setVerified(true); // Assumes a 'verified' field exists in the User entity
+                        sellerRepository.save(seller);
                     }
 
                     // Remove token after verification

@@ -13,6 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -24,21 +26,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
-        log.info("Attempting to load user: {}", username);
+        log.info("Attempting to load user/seller: {}", username);
 
-        User user = getUserByUsername(username);
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        Optional<Seller> sellerOptional = sellerRepository.findByUsername(username);
 
-        if (user != null) {
+        if (userOptional.isPresent()) {
+            log.info("Attempting to load user: {}", username);
+            User user = userOptional.get();
             return org.springframework.security.core.userdetails.User
                     .withUsername(user.getUsername())
                     .password(user.getPassword())
                     .authorities(user.getRole().toString())
                     .build();
         }
-
-        Seller seller = getSellerByUsername(username);
-
-        if (seller != null) {
+        else if (sellerOptional.isPresent()) {
+            log.info("Attempting to load seller: {}", username);
+            Seller seller = sellerOptional.get();
             return org.springframework.security.core.userdetails.User
                     .withUsername(seller.getUsername())
                     .password(seller.getPassword())

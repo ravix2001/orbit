@@ -20,7 +20,7 @@ public class SellerController {
     public ResponseEntity<SellerDTO> getSellerProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        return new ResponseEntity<>(sellerService.getSellerDTOByUsername(username), HttpStatus.OK);
+        return ResponseEntity.ok(sellerService.getSellerDTOByUsername(username));
     }
 
     @PutMapping("/update")
