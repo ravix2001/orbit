@@ -1,24 +1,39 @@
 package com.ravi.orbit.repository;
 
+import com.ravi.orbit.dto.ProductDTO;
 import com.ravi.orbit.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    Page<Product> findAll(Pageable pageable);
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.productId, p.name, p.brand, p.description, " +
+            "p.status, p.quantity, p.marketPrice, p.discountPercent, p.sellingPrice, p.imgUrl ) " +
+            " FROM Product p" +
+            " WHERE p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
+    Page<ProductDTO> getAllProducts(Pageable pageable);
 
-    Optional<Product> findByProductId(String productId);
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.productId, p.name, p.brand, p.description, " +
+            "p.status, p.quantity, p.marketPrice, p.discountPercent, p.sellingPrice, p.imgUrl ) " +
+            " FROM Product p" +
+            " WHERE p.id = :id")
+    Optional<ProductDTO> getProductDTOById(Long id);
 
-    List<Product> findByName(String name);
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.productId, p.name, p.brand, p.description, " +
+            "p.status, p.quantity, p.marketPrice, p.discountPercent, p.sellingPrice, p.imgUrl ) " +
+            " FROM Product p" +
+            " WHERE p.id = :productId")
+    Optional<ProductDTO> getProductDTOByProductId(String productId);
 
-//    The _ (underscore) lets Spring Data JPA traverse into the category field and use its id.
-    List<Product> findByCategories_Id(Long categoryId, Pageable pageable);
-
-    List<Product> findBySeller_Username(String username);
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.productId, p.name, p.brand, p.description, " +
+            "p.status, p.quantity, p.marketPrice, p.discountPercent, p.sellingPrice, p.imgUrl ) " +
+            " FROM Product p" +
+            " WHERE p.name = :name")
+    List<ProductDTO> getProductDTOsByName(String name);
 
 }

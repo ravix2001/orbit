@@ -1,24 +1,19 @@
 package com.ravi.orbit.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@Getter
+@Setter
+@Table(name = "seller_report")
 public class SellerReport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
-
-    @OneToOne
-    private Seller seller;
 
     private int totalOrders = 0;
 
@@ -35,5 +30,12 @@ public class SellerReport {
     private double totalTax = 0;
 
     private double netRevenue = 0;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
+    private Seller seller;
+
+    @Column(name = "seller_id", insertable = false, updatable = false)
+    private String sellerId;
 
 }

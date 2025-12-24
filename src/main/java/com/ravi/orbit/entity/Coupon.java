@@ -1,20 +1,16 @@
 package com.ravi.orbit.entity;
 
+import com.ravi.orbit.enums.EStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@Getter
+@Setter
+@Table(name = "coupon")
 public class Coupon {
 
     @Id
@@ -33,9 +29,22 @@ public class Coupon {
 
     private double minimumOrderAmount;
 
-    private boolean isActive;
+    private double maximumOrderAmount;
 
-    @ManyToMany(mappedBy = "usedCoupons")
-    private Set<User> usedByUsers = new HashSet<>();
+    private EStatus status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+
+    @Column(name = "product_id", insertable = false, updatable = false)
+    private String productId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private String userId;
 
 }

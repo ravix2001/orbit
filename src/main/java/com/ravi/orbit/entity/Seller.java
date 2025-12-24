@@ -1,58 +1,87 @@
 package com.ravi.orbit.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ravi.orbit.enums.ACCOUNT_STATUS;
-import com.ravi.orbit.enums.USER_ROLE;
+import com.ravi.orbit.enums.EGender;
+import com.ravi.orbit.enums.ERole;
+import com.ravi.orbit.enums.EStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@Getter
+@Setter
+@Table(name = "seller")
 public class Seller {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private String fullName;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "middle_name")
+    private String middleName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "username")
     private String username;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//    @JsonIgnore
-    private String password;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
-    @Column(nullable = false)
+    @Column(name = "phone")
     private String phone;
 
-    @Embedded
-    private BusinessDetails businessDetails = new BusinessDetails();
+    @Column(name = "email")
+    private String email;
 
-    @Embedded
-    private BankDetails bankDetails = new BankDetails();
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "password")
+    private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "gender")
+    private EGender gender;
+
+    @Column(name = "dob")
+    private LocalDate dob;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private ERole role = ERole.SELLER;
+
+    // status
+    @Enumerated(EnumType.STRING)
+    @Column(name = "seller_status")
+    private EStatus status = EStatus.PENDING;
+
+    @Column(name = "img_url")
+    private String imgURL;
+
+    // address
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "zipcode")
+    private String zipcode;
+
+    @Column(name = "state")
+    private String state;
+
+    @Column(name = "countryCode")
+    private String countryCode;
+
+    @Column(name = "citizen_number")
+    private String citizenNumber;   // Citizenship ID Number
+
+    @Column(name = "nid")
+    private String nid;     // NID => National Identification Number
+
+    @Column(name = "pan")
     private String pan;     // PAN => Personal Account Number
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private Address address = new Address();
-
-    @Enumerated(EnumType.STRING)
-    private USER_ROLE role = USER_ROLE.ROLE_SELLER;
-
-//    private boolean isEmailVerified = false;
-
-    @Enumerated(EnumType.STRING)
-    private ACCOUNT_STATUS accountStatus = ACCOUNT_STATUS.PENDING_VERIFICATION;
 
 }

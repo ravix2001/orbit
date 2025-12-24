@@ -1,22 +1,16 @@
 package com.ravi.orbit.entity;
 
-import com.ravi.orbit.enums.ORDER_STATUS;
+import com.ravi.orbit.enums.EOrderStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
-@Table(name = "orders")
+@Getter
+@Setter
+@Table(name = "order")
 public class Order {
 
     @Id
@@ -25,18 +19,10 @@ public class Order {
 
     private String orderId;
 
-    @ManyToOne
-    private User user;
-
-    private Long sellerId;
-
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<OrderItem> orderItems = new ArrayList<>();
-
     private String status;
 
     @ManyToOne
-    private Address shippingAddress;
+    private DeliveryAddress shippingAddress;
 
     private int totalItems;
 
@@ -47,13 +33,27 @@ public class Order {
     private double totalSellingPrice;
 
     @Enumerated(EnumType.STRING)
-    private ORDER_STATUS orderStatus;
+    private EOrderStatus orderStatus;
 
-    @Embedded
-    private PaymentDetails paymentDetails = new PaymentDetails();
+//    @Embedded
+//    private PaymentDetails paymentDetails = new PaymentDetails();
 
     private LocalDateTime orderDate = LocalDateTime.now();
 
     private LocalDateTime deliveryDate = orderDate.plusDays(3);     // delivery date = 3 days of order date
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private String userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
+    private Seller seller;
+
+    @Column(name = "seller_id", insertable = false, updatable = false)
+    private String sellerId;
 
 }

@@ -1,24 +1,19 @@
 package com.ravi.orbit.controller;
 
-import com.ravi.orbit.dto.LoginDto;
-import com.ravi.orbit.dto.SellerDto;
-import com.ravi.orbit.dto.UserDto;
-import com.ravi.orbit.entity.Seller;
-import com.ravi.orbit.entity.User;
-import com.ravi.orbit.exceptions.UserAlreadyExistsException;
-import com.ravi.orbit.service.SellerService;
-import com.ravi.orbit.service.UserDetailsServiceImpl;
-import com.ravi.orbit.service.UserService;
+import com.ravi.orbit.dto.SellerDTO;
+import com.ravi.orbit.dto.AuthPayload;
+import com.ravi.orbit.dto.UserDTO;
+import com.ravi.orbit.service.ISellerService;
+import com.ravi.orbit.service.IUserService;
+import com.ravi.orbit.service.impl.SellerServiceImpl;
+import com.ravi.orbit.service.impl.UserServiceImpl;
 import com.ravi.orbit.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.Map;
 
 @Slf4j
@@ -27,129 +22,36 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final UserService userService;
+    private final IUserService userService;
 
-    private final SellerService sellerService;
-
-    private final AuthenticationManager authenticationManager;
-
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final ISellerService sellerService;
 
     private final JwtUtil jwtUtil;
 
     @PostMapping("/userSignup")
-    public ResponseEntity<Map<String, String>> userSignup(@RequestBody UserDto userDto) {
-        try {
-            // Save the new user
-            User savedUser = userService.saveNewUser(userDto);
-
-            // Generate tokens for the new user, allowing immediate login
-            String accessToken = jwtUtil.generateJwtToken(savedUser.getUsername());
-            String refreshToken = jwtUtil.generateRefreshToken(savedUser.getUsername());
-
-            URI location = URI.create("/api/user/profile/" + savedUser.getId());
-
-            // Respond with tokens and user profile location
-            return ResponseEntity.created(location).body(Map.of("accessToken", accessToken, "refreshToken", refreshToken
-//                    "userId", savedUser.getId().toString()
-        ));
-    } catch (UserAlreadyExistsException e) {
-        // Handle duplicate user error
-        return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
+    public ResponseEntity<AuthPayload> userSignup(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.userSignup(userDTO));
     }
-}
 
     @PostMapping("/sellerSignup")
-    public ResponseEntity<Map<String, String>> sellerSignup(@RequestBody SellerDto sellerDto) {
-        try{
-            Seller savedSeller = sellerService.saveNewSeller(sellerDto);
-
-            String accessToken = jwtUtil.generateJwtToken(savedSeller.getUsername());
-            String refreshToken = jwtUtil.generateRefreshToken(savedSeller.getUsername());
-
-            URI location = URI.create("/api/seller/profile" + savedSeller.getId());
-            return ResponseEntity.created(location).body(Map.of("accessToken", accessToken, "refreshToken", refreshToken));
-        }catch (UserAlreadyExistsException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
-        }
-
+    public ResponseEntity<AuthPayload> sellerSignup(@RequestBody SellerDTO sellerDTO) {
+        return ResponseEntity.ok(sellerService.sellerSignup(sellerDTO));
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> userLogin(@RequestBody LoginDto loginDto) {
-        try {
-            // Create a user object and set credentials from the login DTO
-            User user = new User();
-            user.setUsername(loginDto.getUsername());
-            user.setPassword(loginDto.getPassword());
-
-            // Authenticate the user
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-            );
-
-            // Load user details from the UserDetailsService implementation
-            UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(user.getUsername());
-
-            // Generate the access token (short-lived)
-            String accessToken = jwtUtil.generateJwtToken(userDetails.getUsername());
-
-            // Generate the refresh token (long-lived)
-            String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
-
-            // Log successful login
-            log.info("User {} successfully logged in", user.getUsername());
-
-            // Return both tokens as a JSON response
-            return ResponseEntity.ok(Map.of(
-                    "accessToken", accessToken,
-                    "refreshToken", refreshToken
-            ));
-        } catch (Exception e) {
-            // Log the error and return an error response for invalid authentication attempts
-            log.error("Error logging in user: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
-        }
+    @PostMapping("/userlogin")
+    public ResponseEntity<AuthPayload> userLogin(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.userLoginNew(userDTO));
     }
 
-//    @PostMapping("/sellerLogin")
-//    public ResponseEntity<Map<String, String>> sellerLogin(@RequestBody LoginDto loginDto) {
-//        try{
-//            Seller seller = new Seller();
-//            seller.setUsername(loginDto.getUsername());
-//            seller.setPassword(loginDto.getPassword());
-//            // Authenticate the user
-//            authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(seller.getUsername(), seller.getPassword())
-//            );
-//
-//            // Load user details (in this case, seller details) from the UserDetailsService implementation
-//            UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(seller.getUsername());
-//
-//            // Generate the access token (short-lived)
-//            String accessToken = jwtUtil.generateJwtToken(userDetails.getUsername());
-//
-//            // Generate the refresh token (long-lived)
-//            String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
-//
-//            // Log successful login
-//            log.info("Seller {} successfully logged in", seller.getUsername());
-//
-//            // Return both tokens as a JSON response
-//            return ResponseEntity.ok(Map.of(
-//                    "accessToken", accessToken,
-//                    "refreshToken", refreshToken
-//            ));
-//        } catch (Exception e) {
-//            // Log the error and return an error response for invalid authentication attempts
-//            log.error("Error logging in seller: {}", e.getMessage());
-//            return ResponseEntity.badRequest().body(Map.of("error", "Invalid credentials"));
-//        }
-//    }
+    @PostMapping("/sellerlogin")
+    public ResponseEntity<AuthPayload> sellerLogin(@RequestBody SellerDTO sellerDTO) {
+        return ResponseEntity.ok(sellerService.sellerLogin(sellerDTO));
+    }
 
+    // need to be reworked
     @PostMapping("/refreshToken")
     public ResponseEntity<Map<String, String>> refreshToken(@RequestBody Map<String, String> request) {
-        try{
+        try {
             String refreshToken = request.get("refreshToken");
 
             if (refreshToken == null) throw new IllegalArgumentException("Refresh token is missing");
@@ -165,7 +67,7 @@ public class AuthController {
 
             return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
 
-        }catch(Exception e){
+        } catch (Exception e) {
             log.error("Error refreshing token: {}", e.getMessage());
             return ResponseEntity.badRequest().body(null);
         }

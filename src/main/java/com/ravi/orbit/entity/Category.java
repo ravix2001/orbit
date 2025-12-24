@@ -1,30 +1,27 @@
 package com.ravi.orbit.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ravi.orbit.enums.EStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
-import java.util.HashSet;
-import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@Getter
+@Setter
+@Table(name = "category")
 public class Category {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "name")
     private String name;
 
-    @ManyToMany(mappedBy = "categories")
-    @JsonIgnore     // Prevents recursive serialization
-    private Set<Product> products;
+    @Column(name = "status")
+    private EStatus status = EStatus.ACTIVE;
+
+    @Column(name = "img_url")
+    private String imgUrl;
+
 }

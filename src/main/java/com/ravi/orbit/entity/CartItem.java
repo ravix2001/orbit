@@ -1,28 +1,17 @@
 package com.ravi.orbit.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-//@Data   // caused circular references due to toString present in @Data annotation
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(exclude = {"cart"})
+@Table(name = "cart_item")
 public class CartItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JsonIgnore
-    private Cart cart;
-
-    @ManyToOne                  // many carts can have the same product
-    private Product product;
 
     private String size;
 
@@ -32,6 +21,18 @@ public class CartItem {
 
     private double sellingPrice;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+
+    @Column(name = "product_id", insertable = false, updatable = false)
+    private String productId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cart_id", referencedColumnName = "id")
+    private Cart cart;
+
+    @Column(name = "cart_id", insertable = false, updatable = false)
+    private String cartId;
 
 }

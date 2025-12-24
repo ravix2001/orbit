@@ -1,58 +1,86 @@
 package com.ravi.orbit.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ravi.orbit.enums.ACCOUNT_STATUS;
-import com.ravi.orbit.enums.GENDER;
-import com.ravi.orbit.enums.USER_ROLE;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import com.ravi.orbit.enums.ERole;
+import com.ravi.orbit.enums.EStatus;
+import com.ravi.orbit.enums.EGender;
 
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDate;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-//@EqualsAndHashCode(exclude = {"addresses", "usedCoupons"})
-@EqualsAndHashCode(exclude = {"usedCoupons"})
+@Getter
+@Setter
+@Table(name = "user")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    private String fullName;
+    @Column(name = "first_name")
+    private String firstName;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "middle_name")
+    private String middleName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "username")
     private String username;
 
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
-
-    @Column(unique = true, nullable = false)
-    private String email;
-
+    @Column(name = "phone")
     private String phone;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private Address address = new Address();
+    @Column(name = "email")
+    private String email;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "password")
+    private String password;
 
     @Enumerated(EnumType.STRING)
-    private GENDER gender;
+    @Column(name = "gender")
+    private EGender gender;
+
+    @Column(name = "dob")
+    private LocalDate dob;
 
     @Enumerated(EnumType.STRING)
-    private USER_ROLE role = USER_ROLE.ROLE_USER;
+    @Column(name = "role")
+    private ERole role = ERole.USER;
 
+    // status
     @Enumerated(EnumType.STRING)
-    private ACCOUNT_STATUS accountStatus = ACCOUNT_STATUS.PENDING_VERIFICATION;
+    @Column(name = "user_status")
+    private EStatus status = EStatus.ACTIVE;
 
-    @ManyToMany()
-    @JsonIgnore
-    private Set<Coupon> usedCoupons = new HashSet<>();
+    @Column(name = "img_url")
+    private String imgURL;
+
+    // address
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "zipcode")
+    private String zipcode;
+
+    @Column(name = "state")
+    private String state;
+
+    @Column(name = "countryCode")
+    private String countryCode;
 
 }

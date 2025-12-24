@@ -1,7 +1,6 @@
 package com.ravi.orbit.config;
 
 import com.ravi.orbit.filter.JwtFilter;
-import com.ravi.orbit.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,15 +19,12 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
-    private final UserDetailsServiceImpl userDetailsService;
 
     private final JwtFilter jwtFilter;
 

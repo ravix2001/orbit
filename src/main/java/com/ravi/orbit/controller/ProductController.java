@@ -1,11 +1,14 @@
 package com.ravi.orbit.controller;
 
-import com.ravi.orbit.dto.ProductDto;
-import com.ravi.orbit.dto.ProductResponseDto;
+import com.ravi.orbit.dto.ProductDTO;
 import com.ravi.orbit.entity.Product;
-import com.ravi.orbit.service.ProductService;
+import com.ravi.orbit.service.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -19,92 +22,44 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ProductController {
 
-    private final ProductService productService;
+    private final IProductService productService;
 
-    /**
-     * Get paginated products
-     */
     @GetMapping("/paginated")
-    public ResponseEntity<Page<ProductResponseDto>> getAllProductsPaginated(@RequestParam(defaultValue = "0") int page, // Default to page 0
-                                                                            @RequestParam(defaultValue = "20") int size // Default page size is 20
-                                                                                  ){
-        Page<ProductResponseDto> paginatedProducts = productService.getAllPaginated(page, size);
-        return ResponseEntity.ok(paginatedProducts);
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return new ResponseEntity<>(productService.getAllProducts(pageable), HttpStatus.OK);
     }
 
-    /**
-     * Get all products
-     */
-    @GetMapping("/products")
-    public ResponseEntity<List<ProductResponseDto>> getAllProducts() {
-        return ResponseEntity.ok(productService.getAll());
+    @PostMapping("/handleProduct")
+    public ResponseEntity<ProductDTO> handleProduct(@RequestBody ProductDTO productDTO) {
+        return new ResponseEntity<>(productService.handleProduct(productDTO), HttpStatus.OK);
     }
 
-    /**
-     * Get product by id
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id) {
-        Optional<Product> product = productService.getProductById(id);
-        return product.map(value -> ResponseEntity.ok(productService.getProductResponse(value))).orElseGet(() -> ResponseEntity.notFound().build());
+    @GetMapping("/id/{id}")
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+        return new ResponseEntity<>(productService.getProductDTOById(id), HttpStatus.OK);
     }
 
-//    @GetMapping("/{id}")
-//    public ResponseEntity<ProductPublicResponseDto> getProductById(@PathVariable Long id) {
-//        return ResponseEntity.ok(productService.getProductById(id));
-//    }
-
-    /**
-     * Get product by productId
-     */
     @GetMapping("/productId/{productId}")
-    public ResponseEntity<ProductResponseDto> getProduct(@PathVariable String productId) {
-        Optional<Product> product = productService.findByProductId(productId);
-        return product.map(value -> ResponseEntity.ok(productService.getProductResponse(value))).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<ProductDTO> getProductByProductId(@PathVariable String productId) {
+        return new ResponseEntity<>(productService.getProductDTOByProductId(productId), HttpStatus.OK);
     }
 
-    /**
-     * Get product by productName
-     */
-    @GetMapping("/productName/{name}")
-    public ResponseEntity<List<ProductResponseDto>> getProductByName(@PathVariable String name) {
-        return ResponseEntity.ok(productService.findByName(name));
-    }
-
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<List<ProductResponseDto>> getProductByCategory(@PathVariable Long categoryId, @RequestParam(defaultValue = "0") int page, // Default to page 0
-                                                                         @RequestParam(defaultValue = "20") int size // Default page size is 20
-    ) {
-        return ResponseEntity.ok(productService.findByCategory(categoryId, page, size));
-    }
-
-    @PostMapping("/addProduct")
-    public ResponseEntity<ProductResponseDto> createProduct(@RequestBody @Validated ProductDto productDto) {
-        Product newProduct = productService.saveProduct(productDto);
-        ProductResponseDto productResponseDto = productService.getProductResponse(newProduct);
-        URI location = URI.create("/api/product/" + newProduct.getProductId());
-        return ResponseEntity.created(location).body(productResponseDto);
-    }
-
-    // change these to id instead of productId
-    @PatchMapping("/updateProduct/{id}")
-    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id, @RequestBody ProductDto productDto) {
-        Optional<Product> product = productService.getProductById(id);
-        if (product.isPresent()) {
-            Product updatedProduct = productService.updateProduct(id, productDto);
-            ProductResponseDto productResponseDto = productService.getProductResponse(updatedProduct);
-            return ResponseEntity.ok(productResponseDto);
-        }
-        return ResponseEntity.notFound().build();
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<ProductDTO>> getProductByName(@PathVariable String name) {
+        return new ResponseEntity<>(productService.getProductDTOsByName(name), HttpStatus.OK);
     }
 
     @DeleteMapping("deleteProduct/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
-        boolean isDeleted = productService.deleteProductById(id);
-        if (isDeleted) {
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        productService.deleteProduct(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

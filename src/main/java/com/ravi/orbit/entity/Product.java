@@ -1,71 +1,63 @@
 package com.ravi.orbit.entity;
 
+import com.ravi.orbit.enums.EStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@Getter
+@Setter
+@Table(name = "product")
 public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @Column(unique = true)
+    @Column(name = "product_id")
     private String productId;
 
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "brand")
     private String brand;
 
+    @Column(name = "description")
     private String description;
 
-    @ElementCollection      // this will create a separate table
-    private List<String> images = new ArrayList<>();
+    @Column(name = "status")
+    private EStatus status = EStatus.ACTIVE;
 
+    @Column(name = "quantity")
     private int quantity;
 
-    private String color;
+    @Column(name = "img_url")
+    private String imgUrl;
 
-    private String size;
-
+    @Column(name = "market_price")
     private double marketPrice;
 
-    private double discount;
+    @Column(name = "discount_percent")
+    private double discountPercent;
 
+    @Column(name = "selling_price")
     private double sellingPrice;
 
-    private int numRatings;
-
-    private double avgRating;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "product_category",
-            joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id", referencedColumnName = "id")
-    )
-    private Set<Category> categories;
-
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_id", referencedColumnName = "id")
     private Seller seller;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(name = "seller_id", insertable = false, updatable = false)
+    private String sellerId;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
+
+    @Column(name = "category_id", insertable = false, updatable = false)
+    private String categoryId;
 
 }

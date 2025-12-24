@@ -1,66 +1,62 @@
 package com.ravi.orbit.controller;
 
-import com.ravi.orbit.entity.Seller;
-import com.ravi.orbit.entity.User;
-import com.ravi.orbit.service.SellerService;
-import com.ravi.orbit.service.UserService;
+import com.ravi.orbit.dto.SellerDTO;
+import com.ravi.orbit.dto.UserDTO;
+import com.ravi.orbit.service.IAdminService;
+import com.ravi.orbit.service.ISellerService;
+import com.ravi.orbit.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final UserService userService;
+    private final IAdminService adminService;
+    private final IUserService userService;
+    private final ISellerService sellerService;
 
-    private final SellerService sellerService;
+    @PostMapping("/handleUser")
+    public ResponseEntity<UserDTO> handleUser(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.handleUser(userDTO));
+    }
 
-    /**
-     * creating existing user an admin
-     */
-    @PostMapping("/create-admin/{id}")
+    @GetMapping("/createAdmin/{id}")
     public ResponseEntity<String> createAdmin(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.addAdmin(id));
+        return ResponseEntity.ok(adminService.createAdmin(id));
     }
 
-    @GetMapping("/profile")
-    public ResponseEntity<User> getAdmin() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        User user = userService.findByUsername(username);
-        return ResponseEntity.ok(user);
+    @GetMapping("/deleteAdmin/{id}")
+    public ResponseEntity<String> deleteAdmin(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.deleteAdmin(id));
     }
+
     // Get all users
-    @GetMapping("/all-users")
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAll());
+    @GetMapping("/allUsers")
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    // Get user by Id
+    // Get user by ID
     @GetMapping("/user/{id}")
-    public ResponseEntity<User> getUser(@PathVariable Long id) {
-        Optional<User> user = userService.findById(id);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<UserDTO> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.getUserDTOById(id));
     }
 
     // Get all sellers
-    @GetMapping("/all-sellers")
-    public ResponseEntity<List<Seller>> getAllSellers() {
+    @GetMapping("/allSellers")
+    public ResponseEntity<List<SellerDTO>> getAllSellers() {
         return ResponseEntity.ok(sellerService.getAllSellers());
     }
 
     // Get seller by ID
     @GetMapping("/seller/{id}")
-    public ResponseEntity<Seller> getSellerById(@PathVariable Long id) {
-        Optional<Seller> seller = sellerService.getSellerById(id);
-        return seller.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<SellerDTO> getSellerById(@PathVariable Long id) {
+        return ResponseEntity.ok(sellerService.getSellerDTOById(id));
     }
 
 }

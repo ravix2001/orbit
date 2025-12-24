@@ -1,29 +1,18 @@
 package com.ravi.orbit.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@Getter
+@Setter
+@Table(name = "order_item")
 public class OrderItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne
-    @JsonIgnore
-    private Order order;
-
-    @ManyToOne                  // many orders can have the same product
-    private Product product;
 
     private String size;
 
@@ -33,6 +22,18 @@ public class OrderItem {
 
     private double sellingPrice;
 
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+
+    @Column(name = "product_id", insertable = false, updatable = false)
+    private String productId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id", referencedColumnName = "id")
+    private Order order;
+
+    @Column(name = "order_id", insertable = false, updatable = false)
+    private String orderId;
 
 }

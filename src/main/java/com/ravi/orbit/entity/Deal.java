@@ -1,16 +1,13 @@
 package com.ravi.orbit.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode
+@Getter
+@Setter
+@Table(name = "deal")
 public class Deal {
 
     @Id
@@ -19,7 +16,18 @@ public class Deal {
 
     private double discount;
 
-    @OneToOne
-    private HomeCategory category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+
+    @Column(name = "product_id", insertable = false, updatable = false)
+    private String productId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private String userId;
 
 }

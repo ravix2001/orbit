@@ -3,27 +3,15 @@ package com.ravi.orbit.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
-//@Data
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(exclude = {"cartItems"})
+@Table(name = "cart")
 public class Cart {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @OneToOne
-    private User user;
-
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)      // the operations performed on the **parent entity** (e.g., `persist`, `remove`, etc.) **will be automatically applied to its associated child entities**.
-    private Set<CartItem> cartItems = new HashSet<>();
 
     private int totalItems;
 
@@ -34,5 +22,12 @@ public class Cart {
     private double discount;
 
     private double totalSellingPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
+
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private String userId;
 
 }

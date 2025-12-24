@@ -1,58 +1,42 @@
 package com.ravi.orbit.controller;
 
-import com.ravi.orbit.dto.ProductResponseDto;
-import com.ravi.orbit.dto.SellerDto;
-import com.ravi.orbit.entity.*;
-import com.ravi.orbit.service.ProductService;
-import com.ravi.orbit.service.SellerService;
-import com.ravi.orbit.service.UserService;
+import com.ravi.orbit.dto.SellerDTO;
+import com.ravi.orbit.service.ISellerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/seller")
 @RequiredArgsConstructor
 public class SellerController {
 
-    private final SellerService sellerService;
-
-    private final ProductService productService;
+    private final ISellerService sellerService;
 
     @GetMapping("/profile")
-    public ResponseEntity<Seller> getSeller() {
+    public ResponseEntity<SellerDTO> getSellerProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        Seller seller = sellerService.findByUsername(username);
-        return ResponseEntity.ok(seller);
+        return new ResponseEntity<>(sellerService.getSellerDTOByUsername(username), HttpStatus.OK);
     }
 
-    @GetMapping("/products")
-    public ResponseEntity<List<ProductResponseDto>> getProductByCategory() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        return ResponseEntity.ok(productService.findBySeller(username));
-    }
+//    @PutMapping("/update")
+//    public ResponseEntity<User> updateUser(@RequestBody UserDTO userDto) {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        String username = authentication.getName();
+//        User updatedUser = userService.saveExistingUser(username, userDto);
+//        return ResponseEntity.ok(updatedUser);
+//    }
 
-    @PatchMapping("/update-profile")
-    public ResponseEntity<Seller> updateSeller(@RequestBody SellerDto sellerDto) {
+    @DeleteMapping("/delete")
+    public ResponseEntity<Void> deleteUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        return ResponseEntity.ok(sellerService.saveExistingSeller(username, sellerDto));
-    }
-
-    // to be fixed later
-    @DeleteMapping("/delete-profile")
-    public ResponseEntity<Void> deleteSeller() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        sellerService.deleteByUsername(username);
-        return ResponseEntity.noContent().build();
+        sellerService.deleteSeller(username);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
