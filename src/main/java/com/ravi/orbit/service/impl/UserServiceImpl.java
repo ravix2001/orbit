@@ -33,6 +33,7 @@ public class UserServiceImpl implements IUserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
+    // handle user for admin controller
     @Override
     public UserDTO handleUser(UserDTO userDTO) {
 
@@ -119,6 +120,13 @@ public class UserServiceImpl implements IUserService {
             log.error("Error logging in user: {}", e.getMessage());
             throw new BadRequestException(e.getMessage());
         }
+    }
+
+    @Override
+    public UserDTO updateUser(UserDTO userDTO, String username) {
+        User user = getUserByUsername(username);
+        userRepository.save(mapToUserEntity(user, userDTO));
+        return userDTO;
     }
 
     @Override

@@ -5,12 +5,9 @@ import com.ravi.orbit.dto.AuthPayload;
 import com.ravi.orbit.dto.UserDTO;
 import com.ravi.orbit.service.ISellerService;
 import com.ravi.orbit.service.IUserService;
-import com.ravi.orbit.service.impl.SellerServiceImpl;
-import com.ravi.orbit.service.impl.UserServiceImpl;
 import com.ravi.orbit.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -59,4 +59,16 @@ public class AdminController {
         return ResponseEntity.ok(sellerService.getSellerDTOById(id));
     }
 
+    @DeleteMapping("/deleteUserHard/{id}")
+    public ResponseEntity<Void> deleteUserHard(@PathVariable Long id) {
+        userService.deleteUserHard(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/deleteSellerHard/{id}")
+    public ResponseEntity<Void> deleteSellerHard(@PathVariable Long id) {
+        sellerService.deleteSellerHard(id);
+        return ResponseEntity.ok().build();
+    }
+
 }

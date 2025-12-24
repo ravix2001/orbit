@@ -23,20 +23,19 @@ public class SellerController {
         return new ResponseEntity<>(sellerService.getSellerDTOByUsername(username), HttpStatus.OK);
     }
 
-//    @PutMapping("/update")
-//    public ResponseEntity<User> updateUser(@RequestBody UserDTO userDto) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String username = authentication.getName();
-//        User updatedUser = userService.saveExistingUser(username, userDto);
-//        return ResponseEntity.ok(updatedUser);
-//    }
+    @PutMapping("/update")
+    public ResponseEntity<SellerDTO> updateSeller(@RequestBody SellerDTO sellerDTO) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return ResponseEntity.ok(sellerService.updateSeller(sellerDTO, username));
+    }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteUser() {
+    public ResponseEntity<Void> deleteSeller() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         sellerService.deleteSeller(username);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
 }

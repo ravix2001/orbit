@@ -12,6 +12,8 @@ public interface ISellerService {
 
     AuthPayload sellerLogin(SellerDTO sellerDTO);
 
+    SellerDTO updateSeller(SellerDTO sellerDTO, String username);
+
     List<SellerDTO> getAllSellers();
 
     SellerDTO getSellerDTOById(Long sellerId);

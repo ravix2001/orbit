@@ -16,6 +16,8 @@ public interface IUserService {
 
     AuthPayload userLoginOld(UserDTO userDTO);
 
+    UserDTO updateUser(UserDTO userDTO, String username);
+
     List<UserDTO> getAllUsers();
 
     UserDTO getUserDTOById(Long id);

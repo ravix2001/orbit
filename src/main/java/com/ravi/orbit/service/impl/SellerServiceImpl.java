@@ -2,7 +2,9 @@ package com.ravi.orbit.service.impl;
 
 import com.ravi.orbit.dto.SellerDTO;
 import com.ravi.orbit.dto.AuthPayload;
+import com.ravi.orbit.dto.UserDTO;
 import com.ravi.orbit.entity.Seller;
+import com.ravi.orbit.entity.User;
 import com.ravi.orbit.enums.EStatus;
 import com.ravi.orbit.exceptions.BadRequestException;
 import com.ravi.orbit.repository.SellerRepository;
@@ -62,6 +64,13 @@ public class SellerServiceImpl implements ISellerService {
 
         response.setSellerDTO(getSellerDTOByUsername(auth.getUsername()));
         return response;
+    }
+
+    @Override
+    public SellerDTO updateSeller(SellerDTO sellerDTO, String username) {
+        Seller seller = getSellerByUsername(username);
+        sellerRepository.save(mapToSellerEntity(seller, sellerDTO));
+        return sellerDTO;
     }
 
     @Override

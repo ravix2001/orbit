@@ -1,21 +1,16 @@
 package com.ravi.orbit.controller;
 
 import com.ravi.orbit.dto.ProductDTO;
-import com.ravi.orbit.entity.Product;
 import com.ravi.orbit.service.IProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/product")
@@ -33,33 +28,39 @@ public class ProductController {
 
         Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         Pageable pageable = PageRequest.of(page, size, sort);
-        return new ResponseEntity<>(productService.getAllProducts(pageable), HttpStatus.OK);
+        return ResponseEntity.ok(productService.getAllProducts(pageable));
     }
 
     @PostMapping("/handleProduct")
     public ResponseEntity<ProductDTO> handleProduct(@RequestBody ProductDTO productDTO) {
-        return new ResponseEntity<>(productService.handleProduct(productDTO), HttpStatus.OK);
+        return ResponseEntity.ok(productService.handleProduct(productDTO));
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-        return new ResponseEntity<>(productService.getProductDTOById(id), HttpStatus.OK);
+        return ResponseEntity.ok(productService.getProductDTOById(id));
     }
 
     @GetMapping("/productId/{productId}")
     public ResponseEntity<ProductDTO> getProductByProductId(@PathVariable String productId) {
-        return new ResponseEntity<>(productService.getProductDTOByProductId(productId), HttpStatus.OK);
+        return ResponseEntity.ok(productService.getProductDTOByProductId(productId));
     }
 
     @GetMapping("/name/{name}")
     public ResponseEntity<List<ProductDTO>> getProductByName(@PathVariable String name) {
-        return new ResponseEntity<>(productService.getProductDTOsByName(name), HttpStatus.OK);
+        return ResponseEntity.ok(productService.getProductDTOsByName(name));
     }
 
     @DeleteMapping("deleteProduct/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("deleteProductHard/{id}")
+    public ResponseEntity<Void> deleteProductHard(@PathVariable Long id) {
+        productService.deleteProductHard(id);
+        return ResponseEntity.ok().build();
     }
 
 }
