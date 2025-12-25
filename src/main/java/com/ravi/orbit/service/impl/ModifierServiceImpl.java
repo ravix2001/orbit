@@ -7,11 +7,15 @@ import com.ravi.orbit.dto.SizeGroupDTO;
 import com.ravi.orbit.entity.Color;
 import com.ravi.orbit.entity.ColorGroup;
 import com.ravi.orbit.entity.Product;
+import com.ravi.orbit.entity.ProductColorGroup;
+import com.ravi.orbit.entity.ProductSizeGroup;
 import com.ravi.orbit.entity.Size;
 import com.ravi.orbit.entity.SizeGroup;
 import com.ravi.orbit.exceptions.BadRequestException;
 import com.ravi.orbit.repository.ColorGroupRepository;
 import com.ravi.orbit.repository.ColorRepository;
+import com.ravi.orbit.repository.ProductColorGroupRepository;
+import com.ravi.orbit.repository.ProductSizeGroupRepository;
 import com.ravi.orbit.repository.SizeGroupRepository;
 import com.ravi.orbit.repository.SizeRepository;
 import com.ravi.orbit.service.IProductService;
@@ -34,19 +38,18 @@ public class ModifierServiceImpl implements ModifierService {
     private final ColorGroupRepository colorGroupRepository;
     private final ColorRepository colorRepository;
     private final IProductService productService;
+    private final ProductSizeGroupRepository productSizeGroupRepository;
+    private final ProductColorGroupRepository productColorGroupRepository;
 
     @Override
     public SizeGroupDTO handleSizeGroup(SizeGroupDTO sizeGroupDTO) {
 
 //        Validator.validateUserSignup(sizeGroupDTO);
 
-        Product product = productService.getProductById(sizeGroupDTO.getProductId());
-
         SizeGroup sizeGroup = null;
 
         if(CommonMethods.isEmpty(sizeGroupDTO.getId())){
             sizeGroup = new SizeGroup();
-            sizeGroup.setProduct(product);
         }
         else{
             sizeGroup = getSizeGroupById(sizeGroupDTO.getId());
@@ -78,13 +81,10 @@ public class ModifierServiceImpl implements ModifierService {
 
 //        Validator.validateUserSignup(colorGroupDTO);
 
-        Product product = productService.getProductById(colorGroupDTO.getProductId());
-
         ColorGroup colorGroup = null;
 
         if(CommonMethods.isEmpty(colorGroupDTO.getId())){
             colorGroup = new ColorGroup();
-            colorGroup.setProduct(product);
         }
         else{
             colorGroup = getColorGroupById(colorGroupDTO.getId());
@@ -110,6 +110,73 @@ public class ModifierServiceImpl implements ModifierService {
         colorGroupDTO.setId(colorGroup.getId());
         return colorGroupDTO;
 
+    }
+
+    @Override
+    public String linkProductAndSizeGroup(Long productId, Long sizeGroupId){
+
+        ProductSizeGroup existingProductSizeGroup = productSizeGroupRepository.findByProductIdAndSizeGroupId(productId, sizeGroupId);
+        if(existingProductSizeGroup != null){
+            return "Size group already linked to this product";
+        }
+
+        Product product = productService.getProductById(productId);
+        SizeGroup sizeGroup = getSizeGroupById(sizeGroupId);
+
+        ProductSizeGroup productSizeGroup = new ProductSizeGroup();
+        productSizeGroup.setProduct(product);
+        productSizeGroup.setSizeGroup(sizeGroup);
+        productSizeGroupRepository.save(productSizeGroup);
+
+        return "Size group linked to this product successfully";
+
+    }
+
+    @Override
+    public String unlinkProductAndSizeGroup(Long productId, Long sizeGroupId){
+        ProductSizeGroup existingProductSizeGroup = productSizeGroupRepository.findByProductIdAndSizeGroupId(productId, sizeGroupId);
+        if(existingProductSizeGroup == null){
+            return "Size group is not linked to this product";
+        }
+        productSizeGroupRepository.delete(existingProductSizeGroup);
+        return "Size group unlinked from this product successfully";
+    }
+
+    @Override
+    public String linkProductAndColorGroup(Long productId, Long colorGroupId) {
+
+        ProductColorGroup existingProductColorGroup =
+                productColorGroupRepository.findByProductIdAndColorGroupId(productId, colorGroupId);
+
+        if (existingProductColorGroup != null) {
+            return "Color group already linked to this product";
+        }
+
+        Product product = productService.getProductById(productId);
+        ColorGroup colorGroup = getColorGroupById(colorGroupId);
+
+        ProductColorGroup productColorGroup = new ProductColorGroup();
+        productColorGroup.setProduct(product);
+        productColorGroup.setColorGroup(colorGroup);
+
+        productColorGroupRepository.save(productColorGroup);
+
+        return "Color group linked to this product successfully";
+    }
+
+    @Override
+    public String unlinkProductAndColorGroup(Long productId, Long colorGroupId) {
+
+        ProductColorGroup existingProductColorGroup =
+                productColorGroupRepository.findByProductIdAndColorGroupId(productId, colorGroupId);
+
+        if (existingProductColorGroup == null) {
+            return "Color group is not linked to this product";
+        }
+
+        productColorGroupRepository.delete(existingProductColorGroup);
+
+        return "Color group unlinked from this product successfully";
     }
 
     @Override

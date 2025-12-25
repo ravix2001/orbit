@@ -32,6 +32,26 @@ public class ModifierController {
         return ResponseEntity.ok(modifierService.handleColorGroup(colorGroupDTO));
     }
 
+    @PostMapping("/linkProductAndSizeGroup")
+    public ResponseEntity<String> linkProductAndSizeGroup(@RequestBody Long productId, @RequestBody Long sizeGroupId) {
+        return ResponseEntity.ok(modifierService.linkProductAndSizeGroup(productId, sizeGroupId));
+    }
+
+    @PostMapping("/unlinkProductAndSizeGroup")
+    public ResponseEntity<String> unlinkProductAndSizeGroup(@RequestBody Long productId, @RequestBody Long sizeGroupId) {
+        return ResponseEntity.ok(modifierService.unlinkProductAndSizeGroup(productId, sizeGroupId));
+    }
+
+    @PostMapping("/linkProductAndColorGroup")
+    public ResponseEntity<String> linkProductAndColorGroup(@RequestBody Long productId, @RequestBody Long colorGroupId) {
+        return ResponseEntity.ok(modifierService.linkProductAndColorGroup(productId, colorGroupId));
+    }
+
+    @PostMapping("/unlinkProductAndColorGroup")
+    public ResponseEntity<String> unlinkProductAndColorGroup(@RequestBody Long productId, @RequestBody Long colorGroupId) {
+        return ResponseEntity.ok(modifierService.unlinkProductAndColorGroup(productId, colorGroupId));
+    }
+
     @GetMapping("/getSizeGroups")
     public ResponseEntity<List<SizeGroupDTO>> getAllSizeGroups() {
         return ResponseEntity.ok(modifierService.getAllSizeGroups());

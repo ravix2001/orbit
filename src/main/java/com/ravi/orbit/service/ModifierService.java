@@ -13,6 +13,10 @@ public interface ModifierService {
 
     SizeGroupDTO handleSizeGroup(SizeGroupDTO sizeGroupDTO);
     ColorGroupDTO handleColorGroup(ColorGroupDTO colorGroupDTO);
+    String linkProductAndSizeGroup(Long productId, Long sizeGroupId);
+    String unlinkProductAndSizeGroup(Long productId, Long sizeGroupId);
+    String linkProductAndColorGroup(Long productId, Long colorGroupId);
+    String unlinkProductAndColorGroup(Long productId, Long colorGroupId);
     List<SizeGroupDTO> getAllSizeGroups();
     List<ColorGroupDTO> getAllColorGroups();
     SizeGroupDTO getSizeGroupDTOById(Long id);
