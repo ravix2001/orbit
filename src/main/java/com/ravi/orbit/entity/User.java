@@ -60,7 +60,7 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private ERole role = ERole.USER;
+    private ERole role = ERole.ROLE_USER;
 
     // status
     @Enumerated(EnumType.STRING)

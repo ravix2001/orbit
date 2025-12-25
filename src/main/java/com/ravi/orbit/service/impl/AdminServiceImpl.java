@@ -20,7 +20,7 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public String createAdmin(Long id){
         User user = userService.getUserById(id);
-        user.setRole(ERole.ADMIN);
+        user.setRole(ERole.ROLE_ADMIN);
         userRepository.save(user);
         log.info("User with id {} is added as admin", id);
         return user.getUsername() + " is added as admin";
@@ -29,7 +29,7 @@ public class AdminServiceImpl implements IAdminService {
     @Override
     public String deleteAdmin(Long id){
         User user = userService.getUserById(id);
-        user.setRole(ERole.USER);
+        user.setRole(ERole.ROLE_USER);
         userRepository.save(user);
         log.error("User with id {} is removed from admin", id);
         return user.getUsername() + " is removed from admin";

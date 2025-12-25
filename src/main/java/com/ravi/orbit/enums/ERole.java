@@ -2,8 +2,8 @@ package com.ravi.orbit.enums;
 
 public enum ERole {
 
-    ADMIN,
-    USER,
-    SELLER
+    ROLE_ADMIN,
+    ROLE_USER,
+    ROLE_SELLER
 
 }

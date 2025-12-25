@@ -52,7 +52,7 @@ public class Seller {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
-    private ERole role = ERole.SELLER;
+    private ERole role = ERole.ROLE_SELLER;
 
     // status
     @Enumerated(EnumType.STRING)
