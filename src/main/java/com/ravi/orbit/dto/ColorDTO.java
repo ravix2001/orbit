@@ -9,6 +9,12 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ColorDTO {
 
+    public ColorDTO(Long id, String color, boolean isAvailable) {
+        this.id = id;
+        this.color = color;
+        this.isAvailable = isAvailable;
+    }
+
     private Long id;
 
     private String color;

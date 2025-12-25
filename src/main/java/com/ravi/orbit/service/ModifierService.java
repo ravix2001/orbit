@@ -1,6 +1,8 @@
 package com.ravi.orbit.service;
 
+import com.ravi.orbit.dto.ColorDTO;
 import com.ravi.orbit.dto.ColorGroupDTO;
+import com.ravi.orbit.dto.SizeDTO;
 import com.ravi.orbit.dto.SizeGroupDTO;
 import com.ravi.orbit.entity.Color;
 import com.ravi.orbit.entity.ColorGroup;
@@ -19,6 +21,10 @@ public interface ModifierService {
     String unlinkProductAndColorGroup(Long productId, Long colorGroupId);
     List<SizeGroupDTO> getAllSizeGroups();
     List<ColorGroupDTO> getAllColorGroups();
+    SizeGroupDTO getSizeGroupWithSizes(Long sizeGroupId);
+    ColorGroupDTO getColorGroupWithColors(Long colorGroupId);
+    List<SizeDTO> getSizesBySizeGroupId(Long sizeGroupId);
+    List<ColorDTO> getColorsByColorGroupId(Long colorGroupId);
     SizeGroupDTO getSizeGroupDTOById(Long id);
     ColorGroupDTO getColorGroupDTOById(Long id);
     SizeGroup getSizeGroupById(Long id);

@@ -3,6 +3,7 @@ package com.ravi.orbit.service.impl;
 import com.ravi.orbit.dto.*;
 import com.ravi.orbit.entity.Category;
 import com.ravi.orbit.entity.Product;
+import com.ravi.orbit.entity.ProductSizeGroup;
 import com.ravi.orbit.entity.Seller;
 import com.ravi.orbit.enums.EStatus;
 import com.ravi.orbit.exceptions.BadRequestException;
@@ -60,6 +61,15 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public Page<ProductDTO> getAllProducts(Pageable pageable) {
         return productRepository.getAllProducts(pageable);
+    }
+
+    @Override
+    public ProductDTO getProduct(Long id){
+        ProductDTO productDTO = getProductDTOById(id);
+        ProductSizeGroup productSizeGroup = get
+        productDTO.setSizes();
+        productDTO.setColors();
+        return productDTO;
     }
 
     @Override

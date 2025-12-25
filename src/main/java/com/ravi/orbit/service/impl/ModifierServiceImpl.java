@@ -190,6 +190,32 @@ public class ModifierServiceImpl implements ModifierService {
     }
 
     @Override
+    public SizeGroupDTO getSizeGroupWithSizes(Long sizeGroupId){
+        SizeGroupDTO sizeGroupDTO = getSizeGroupDTOById(sizeGroupId);
+        List<SizeDTO> sizes = getSizesBySizeGroupId(sizeGroupId);
+        sizeGroupDTO.setSizes(sizes);
+        return sizeGroupDTO;
+    }
+
+    @Override
+    public ColorGroupDTO getColorGroupWithColors(Long colorGroupId){
+        ColorGroupDTO colorGroupDTO = getColorGroupDTOById(colorGroupId);
+        List<ColorDTO> colors = getColorsByColorGroupId(colorGroupId);
+        colorGroupDTO.setColors(colors);
+        return colorGroupDTO;
+    }
+
+    @Override
+    public List<SizeDTO> getSizesBySizeGroupId(Long sizeGroupId){
+        return sizeRepository.getSizeDTOsBySizeGroupId(sizeGroupId);
+    }
+
+    @Override
+    public List<ColorDTO> getColorsByColorGroupId(Long colorGroupId){
+        return colorRepository.getColorDTOsByColorGroupId(colorGroupId);
+    }
+
+    @Override
     public SizeGroupDTO getSizeGroupDTOById(Long id) {
         return sizeGroupRepository.getSizeGroupDTOById(id)
                 .orElseThrow(() -> new BadRequestException(MyConstants
