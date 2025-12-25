@@ -18,4 +18,6 @@ public class SizeGroupDTO {
 
     private List<SizeDTO> sizes;
 
+    private Long ProductId;
+
 }

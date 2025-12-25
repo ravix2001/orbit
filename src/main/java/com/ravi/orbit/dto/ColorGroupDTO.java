@@ -17,4 +17,6 @@ public class ColorGroupDTO {
 
     private List<ColorDTO> colors;
 
+    private Long productId;
+
 }
