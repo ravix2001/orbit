@@ -30,16 +30,23 @@ import java.util.Optional;
 public class ProductServiceImpl implements IProductService {
 
     private final ProductRepository productRepository;
+    private final ICategoryService categoryService;
+    private final ISellerService sellerService;
 
     @Override
     public ProductDTO handleProduct(ProductDTO productDTO) {
 
 //        Validator.validateUserSignup(categoryDTO);
 
+        Category category = categoryService.getCategoryById(productDTO.getCategoryId());
+        Seller seller = sellerService.getSellerById(productDTO.getSellerId());
+
         Product product = null;
 
         if(CommonMethods.isEmpty(productDTO.getId())){
             product = new Product();
+            product.setCategory(category);
+            product.setSeller(seller);
         }
         else{
             product = getProductById(productDTO.getId());
@@ -47,7 +54,6 @@ public class ProductServiceImpl implements IProductService {
         productRepository.save(mapToProductEntity(product, productDTO));
 
         productDTO.setId(product.getId());
-        productDTO.setDiscountAmount((productDTO.getMarketPrice() * productDTO.getDiscountPercent() / 100));
         return productDTO;
     }
 
@@ -102,7 +108,9 @@ public class ProductServiceImpl implements IProductService {
         product.setQuantity(productDTO.getQuantity());
         product.setMarketPrice(productDTO.getMarketPrice());
         product.setDiscountPercent(productDTO.getDiscountPercent());
+        product.setDiscountAmount((productDTO.getMarketPrice() * productDTO.getDiscountPercent() / 100));
         product.setSellingPrice(productDTO.getMarketPrice() - (productDTO.getMarketPrice() * productDTO.getDiscountPercent() / 100) );
+        product.setImgUrl(productDTO.getImgUrl());
 
         return product;
     }
