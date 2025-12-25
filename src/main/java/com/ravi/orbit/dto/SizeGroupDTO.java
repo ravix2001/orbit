@@ -12,12 +12,15 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class SizeGroupDTO {
 
+    public SizeGroupDTO(Long id, String sizeGroup) {
+        this.id = id;
+        this.sizeGroup = sizeGroup;
+    }
+
     private Long id;
 
     private String sizeGroup;
 
     private List<SizeDTO> sizes;
-
-    private Long ProductId;
 
 }

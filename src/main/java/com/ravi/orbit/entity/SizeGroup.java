@@ -26,10 +26,4 @@ public class SizeGroup {
     @Column(name = "size_group")
     private String sizeGroup;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product product;
-
-    @Column(name = "product_id", insertable = false, updatable = false)
-    private String productId;
 }

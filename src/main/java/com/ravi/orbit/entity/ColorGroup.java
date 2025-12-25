@@ -26,10 +26,4 @@ public class ColorGroup {
     @Column(name = "color_group")
     private String colorGroup;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product product;
-
-    @Column(name = "product_id", insertable = false, updatable = false)
-    private String productId;
 }

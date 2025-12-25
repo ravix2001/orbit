@@ -34,5 +34,5 @@ public class Size {
     private SizeGroup sizeGroup;
 
     @Column(name = "size_group_id", insertable = false, updatable = false)
-    private String sizeGroupId;
+    private Long sizeGroupId;
 }

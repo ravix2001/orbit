@@ -34,5 +34,6 @@ public class Color {
     private ColorGroup colorGroup;
 
     @Column(name = "color_group_id", insertable = false, updatable = false)
-    private String colorGroupId;
+    private Long colorGroupId;
+
 }
