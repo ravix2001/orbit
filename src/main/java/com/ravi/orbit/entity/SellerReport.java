@@ -36,6 +36,6 @@ public class SellerReport {
     private Seller seller;
 
     @Column(name = "seller_id", insertable = false, updatable = false)
-    private String sellerId;
+    private Long sellerId;
 
 }

@@ -27,13 +27,13 @@ public class OrderItem {
     private Product product;
 
     @Column(name = "product_id", insertable = false, updatable = false)
-    private String productId;
+    private Long productId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
     @Column(name = "order_id", insertable = false, updatable = false)
-    private String orderId;
+    private Long orderId;
 
 }

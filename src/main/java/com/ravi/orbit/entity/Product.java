@@ -54,13 +54,13 @@ public class Product {
     private Seller seller;
 
     @Column(name = "seller_id", insertable = false, updatable = false)
-    private String sellerId;
+    private Long sellerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
     @Column(name = "category_id", insertable = false, updatable = false)
-    private String categoryId;
+    private Long categoryId;
 
 }

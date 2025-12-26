@@ -39,6 +39,11 @@ public class PublicController {
         return ResponseEntity.ok(publicService.getCategoryDTOById(id));
     }
 
+    @GetMapping("/products/{categoryId}")
+    public ResponseEntity<List<ProductDTO>> getProductDTOsByCategoryId(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(publicService.getProductDTOsByCategoryId(categoryId));
+    }
+
     @GetMapping("/products/paginated")
     public ResponseEntity<Page<ProductDTO>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
@@ -57,7 +62,7 @@ public class PublicController {
     }
 
     @GetMapping("/product")
-    public ResponseEntity<List<ProductDTO>> getProductByName(@RequestParam String name) {
+    public ResponseEntity<List<ProductDTO>> getProductsByName(@RequestParam String name) {
         return ResponseEntity.ok(publicService.getProductDTOsByName(name));
     }
 

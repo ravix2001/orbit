@@ -13,6 +13,8 @@ public interface IPublicService {
 
     CategoryDTO getCategoryDTOById(Long id);
 
+    List<ProductDTO> getProductDTOsByCategoryId(Long categoryId);
+
     Page<ProductDTO> getAllProducts(Pageable pageable);
 
     ProductDTO getProduct(Long id);

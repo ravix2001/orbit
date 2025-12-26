@@ -33,7 +33,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.productId, p.name, p.brand, p.description, " +
             "p.status, p.quantity, p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice, p.imgUrl ) " +
             " FROM Product p" +
-            " WHERE p.name = :name")
+            " WHERE p.name = :name AND p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
     List<ProductDTO> getProductDTOsByName(String name);
+
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, p.marketPrice," +
+            "p.discountPercent, p.discountAmount, p.sellingPrice, p.imgUrl, p.categoryId) " +
+            " FROM Product p" +
+            " WHERE p.categoryId = :categoryId AND p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
+    List<ProductDTO> getProductDTOsByCategoryId(Long categoryId);
 
 }

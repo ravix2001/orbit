@@ -28,6 +28,6 @@ public class Cart {
     private User user;
 
     @Column(name = "user_id", insertable = false, updatable = false)
-    private String userId;
+    private Long userId;
 
 }
