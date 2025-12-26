@@ -42,6 +42,11 @@ public class PublicServiceImpl implements IPublicService {
     }
 
     @Override
+    public List<ProductDTO> getProductDTOsByCategoryId(Long categoryId){
+        return productRepository.getProductDTOsByCategoryId(categoryId);
+    }
+
+    @Override
     public Page<ProductDTO> getAllProducts(Pageable pageable) {
         return productRepository.getAllProducts(pageable);
     }

@@ -21,13 +21,13 @@ public class Deal {
     private Product product;
 
     @Column(name = "product_id", insertable = false, updatable = false)
-    private String productId;
+    private Long productId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
     @Column(name = "user_id", insertable = false, updatable = false)
-    private String userId;
+    private Long userId;
 
 }

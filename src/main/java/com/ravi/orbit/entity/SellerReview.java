@@ -34,13 +34,13 @@ public class SellerReview {
     private User user;
 
     @Column(name = "user_id", insertable = false, updatable = false)
-    private String userId;
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", referencedColumnName = "id")
     private Seller seller;
 
     @Column(name = "seller_id", insertable = false, updatable = false)
-    private String sellerId;
+    private Long sellerId;
 
 }

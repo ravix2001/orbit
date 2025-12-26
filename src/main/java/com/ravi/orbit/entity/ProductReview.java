@@ -33,6 +33,6 @@ public class ProductReview {
     private Product product;
 
     @Column(name = "product_id", insertable = false, updatable = false)
-    private String productId;
+    private Long productId;
 
 }

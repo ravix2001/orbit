@@ -34,20 +34,20 @@ public class Transaction {
     private User user;
 
     @Column(name = "user_id", insertable = false, updatable = false)
-    private String userId;
+    private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", referencedColumnName = "id")
     private Seller seller;
 
     @Column(name = "seller_id", insertable = false, updatable = false)
-    private String sellerId;
+    private Long sellerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 
     @Column(name = "order_id", insertable = false, updatable = false)
-    private String orderId;
+    private Long orderId;
 
 }

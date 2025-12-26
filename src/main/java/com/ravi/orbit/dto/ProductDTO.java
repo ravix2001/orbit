@@ -29,6 +29,21 @@ public class ProductDTO {
         this.imgUrl = imgUrl;
     }
 
+    public ProductDTO(Long id, String name, String brand, String description,
+                      Double marketPrice, Double discountPercent, Double discountAmount,
+                      Double sellingPrice, String imgUrl, Long categoryId) {
+        this.id = id;
+        this.name = name;
+        this.brand = brand;
+        this.description = description;
+        this.marketPrice = marketPrice;
+        this.discountPercent = discountPercent;
+        this.discountAmount = discountAmount;
+        this.sellingPrice = sellingPrice;
+        this.imgUrl = imgUrl;
+        this.categoryId = categoryId;
+    }
+
     private Long id;
     private String productId;
     private String name;
