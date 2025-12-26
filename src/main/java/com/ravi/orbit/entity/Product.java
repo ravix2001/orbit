@@ -34,8 +34,8 @@ public class Product {
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "img_url")
-    private String imgUrl;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     @Column(name = "market_price")
     private double marketPrice;

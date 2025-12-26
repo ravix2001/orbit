@@ -12,11 +12,11 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CategoryDTO {
 
-    public CategoryDTO(Long id, String name, EStatus status, String imgUrl) {
+    public CategoryDTO(Long id, String name, EStatus status, String imageUrl) {
         this.id = id;
         this.name = name;
         this.status = status;
-        this.imgUrl = imgUrl;
+        this.imageUrl = imageUrl;
     }
 
     private Long id;
@@ -25,7 +25,7 @@ public class CategoryDTO {
 
     private EStatus status;
 
-    private String imgUrl;
+    private String imageUrl;
 
     private List<ProductDTO> products;
 

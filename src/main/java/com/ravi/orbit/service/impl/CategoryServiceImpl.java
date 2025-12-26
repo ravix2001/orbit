@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements ICategoryService {
             category = getCategoryById(categoryDTO.getId());
         }
         category.setName(categoryDTO.getName());
-        category.setImgUrl(categoryDTO.getImgUrl());
+        category.setImageUrl(categoryDTO.getImageUrl());
         categoryRepository.save(category);
 
         categoryDTO.setId(category.getId());

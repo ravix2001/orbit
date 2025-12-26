@@ -21,7 +21,7 @@ public class Category {
     @Column(name = "status")
     private EStatus status = EStatus.ACTIVE;
 
-    @Column(name = "img_url")
-    private String imgUrl;
+    @Column(name = "image_url")
+    private String imageUrl;
 
 }
