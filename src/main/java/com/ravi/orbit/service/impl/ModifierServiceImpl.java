@@ -115,7 +115,7 @@ public class ModifierServiceImpl implements ModifierService {
     @Override
     public String linkProductAndSizeGroup(Long productId, Long sizeGroupId){
 
-        ProductSizeGroup existingProductSizeGroup = productSizeGroupRepository.findByProductIdAndSizeGroupId(productId, sizeGroupId);
+        ProductSizeGroup existingProductSizeGroup = getProductSizeGroupByProductIdAndSizeGroupId(productId, sizeGroupId);
         if(existingProductSizeGroup != null){
             return "Size group already linked to this product";
         }
@@ -134,10 +134,8 @@ public class ModifierServiceImpl implements ModifierService {
 
     @Override
     public String unlinkProductAndSizeGroup(Long productId, Long sizeGroupId){
-        ProductSizeGroup existingProductSizeGroup = productSizeGroupRepository.findByProductIdAndSizeGroupId(productId, sizeGroupId);
-        if(existingProductSizeGroup == null){
-            return "Size group is not linked to this product";
-        }
+        ProductSizeGroup existingProductSizeGroup = getProductSizeGroupByProductIdAndSizeGroupId(productId, sizeGroupId);
+
         productSizeGroupRepository.delete(existingProductSizeGroup);
         return "Size group unlinked from this product successfully";
     }
@@ -145,8 +143,7 @@ public class ModifierServiceImpl implements ModifierService {
     @Override
     public String linkProductAndColorGroup(Long productId, Long colorGroupId) {
 
-        ProductColorGroup existingProductColorGroup =
-                productColorGroupRepository.findByProductIdAndColorGroupId(productId, colorGroupId);
+        ProductColorGroup existingProductColorGroup = getProductColorGroupByProductIdAndColorGroupId(productId, colorGroupId);
 
         if (existingProductColorGroup != null) {
             return "Color group already linked to this product";
@@ -167,8 +164,7 @@ public class ModifierServiceImpl implements ModifierService {
     @Override
     public String unlinkProductAndColorGroup(Long productId, Long colorGroupId) {
 
-        ProductColorGroup existingProductColorGroup =
-                productColorGroupRepository.findByProductIdAndColorGroupId(productId, colorGroupId);
+        ProductColorGroup existingProductColorGroup = getProductColorGroupByProductIdAndColorGroupId(productId, colorGroupId);
 
         if (existingProductColorGroup == null) {
             return "Color group is not linked to this product";
@@ -187,6 +183,18 @@ public class ModifierServiceImpl implements ModifierService {
     @Override
     public List<ColorGroupDTO> getAllColorGroups(){
         return colorGroupRepository.getAllColorGroups();
+    }
+
+    @Override
+    public SizeGroupDTO getSizeGroupByProductId(Long productId){
+        ProductSizeGroup productSizeGroup = getProductSizeGroupByProductId(productId);
+        return getSizeGroupWithSizes(productSizeGroup.getSizeGroupId());
+    }
+
+    @Override
+    public ColorGroupDTO getColorGroupByProductId(Long productId){
+        ProductColorGroup productColorGroup = getProductColorGroupByProductId(productId);
+        return getColorGroupWithColors(productColorGroup.getColorGroupId());
     }
 
     @Override
@@ -227,6 +235,34 @@ public class ModifierServiceImpl implements ModifierService {
         return colorGroupRepository.getColorGroupDTOById(id)
                 .orElseThrow(() -> new BadRequestException(MyConstants
                         .ERR_MSG_NOT_FOUND + "ColorGroup: " + id));
+    }
+
+    @Override
+    public ProductSizeGroup getProductSizeGroupByProductId(Long productId){
+        return productSizeGroupRepository.findByProductId(productId)
+                .orElseThrow(() -> new BadRequestException(MyConstants
+                        .ERR_MSG_NOT_FOUND + "ProductSizeGroup: " + productId));
+    }
+
+    @Override
+    public ProductColorGroup getProductColorGroupByProductId(Long productId){
+        return productColorGroupRepository.findByProductId(productId)
+                .orElseThrow(() -> new BadRequestException(MyConstants
+                        .ERR_MSG_NOT_FOUND + "ProductColorGroup: " + productId));
+    }
+
+    @Override
+    public ProductSizeGroup getProductSizeGroupByProductIdAndSizeGroupId(Long productId, Long sizeGroupId){
+        return productSizeGroupRepository.findByProductIdAndSizeGroupId(productId, sizeGroupId)
+                .orElseThrow(() -> new BadRequestException(MyConstants
+                        .ERR_MSG_NOT_FOUND + "ProductSizeGroup: " + productId));
+    }
+
+    @Override
+    public ProductColorGroup getProductColorGroupByProductIdAndColorGroupId(Long productId, Long colorGroupId){
+        return productColorGroupRepository.findByProductIdAndColorGroupId(productId, colorGroupId)
+                .orElseThrow(() -> new BadRequestException(MyConstants
+                        .ERR_MSG_NOT_FOUND + "ProductColorGroup: " + productId));
     }
 
     @Override
