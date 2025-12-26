@@ -11,13 +11,15 @@ public interface IProductService {
 
     ProductDTO handleProduct(ProductDTO productDTO);
 
-    Page<ProductDTO> getAllProducts(Pageable pageable);
+//    Page<ProductDTO> getAllProducts(Pageable pageable);
+//
+//    ProductDTO getProduct(Long id);
 
     ProductDTO getProductDTOById(Long id);
 
-    ProductDTO getProductDTOByProductId(String productId);
-
-    List<ProductDTO> getProductDTOsByName(String name);
+//    ProductDTO getProductDTOByProductId(String productId);
+//
+//    List<ProductDTO> getProductDTOsByName(String name);
 
     void deleteProduct(Long id);
 

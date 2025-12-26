@@ -43,17 +43,17 @@ public class CategoryServiceImpl implements ICategoryService {
         return categoryDTO;
     }
 
-    @Override
-    public List<CategoryDTO> getAllCategories() {
-        return categoryRepository.getAllCategories();
-    }
-
-    @Override
-    public CategoryDTO getCategoryDTOById(Long id) {
-        return categoryRepository.getCategoryDTOById(id)
-                .orElseThrow(() -> new BadRequestException(MyConstants
-                        .ERR_MSG_NOT_FOUND + "Category: " + id));
-    }
+//    @Override
+//    public List<CategoryDTO> getAllCategories() {
+//        return categoryRepository.getAllCategories();
+//    }
+//
+//    @Override
+//    public CategoryDTO getCategoryDTOById(Long id) {
+//        return categoryRepository.getCategoryDTOById(id)
+//                .orElseThrow(() -> new BadRequestException(MyConstants
+//                        .ERR_MSG_NOT_FOUND + "Category: " + id));
+//    }
 
     @Override
     public void deleteCategory(Long id) {

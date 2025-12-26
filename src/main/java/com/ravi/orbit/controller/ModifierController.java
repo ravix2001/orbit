@@ -2,7 +2,7 @@ package com.ravi.orbit.controller;
 
 import com.ravi.orbit.dto.ColorGroupDTO;
 import com.ravi.orbit.dto.SizeGroupDTO;
-import com.ravi.orbit.service.ModifierService;
+import com.ravi.orbit.service.IModifierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ModifierController {
 
-    private final ModifierService modifierService;
+    private final IModifierService modifierService;
 
     @PostMapping("/handleSizes")
     public ResponseEntity<SizeGroupDTO> handleSizes(@RequestBody SizeGroupDTO sizeGroupDTO) {
@@ -33,22 +34,22 @@ public class ModifierController {
     }
 
     @PostMapping("/linkProductAndSizeGroup")
-    public ResponseEntity<String> linkProductAndSizeGroup(@RequestBody Long productId, @RequestBody Long sizeGroupId) {
+    public ResponseEntity<String> linkProductAndSizeGroup(@RequestParam Long productId, @RequestParam Long sizeGroupId) {
         return ResponseEntity.ok(modifierService.linkProductAndSizeGroup(productId, sizeGroupId));
     }
 
     @PostMapping("/unlinkProductAndSizeGroup")
-    public ResponseEntity<String> unlinkProductAndSizeGroup(@RequestBody Long productId, @RequestBody Long sizeGroupId) {
+    public ResponseEntity<String> unlinkProductAndSizeGroup(@RequestParam Long productId, @RequestParam Long sizeGroupId) {
         return ResponseEntity.ok(modifierService.unlinkProductAndSizeGroup(productId, sizeGroupId));
     }
 
     @PostMapping("/linkProductAndColorGroup")
-    public ResponseEntity<String> linkProductAndColorGroup(@RequestBody Long productId, @RequestBody Long colorGroupId) {
+    public ResponseEntity<String> linkProductAndColorGroup(@RequestParam Long productId, @RequestParam Long colorGroupId) {
         return ResponseEntity.ok(modifierService.linkProductAndColorGroup(productId, colorGroupId));
     }
 
     @PostMapping("/unlinkProductAndColorGroup")
-    public ResponseEntity<String> unlinkProductAndColorGroup(@RequestBody Long productId, @RequestBody Long colorGroupId) {
+    public ResponseEntity<String> unlinkProductAndColorGroup(@RequestParam Long productId, @RequestParam Long colorGroupId) {
         return ResponseEntity.ok(modifierService.unlinkProductAndColorGroup(productId, colorGroupId));
     }
 
