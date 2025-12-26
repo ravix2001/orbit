@@ -9,9 +9,9 @@ public interface ICategoryService {
 
     CategoryDTO handleCategory(CategoryDTO categoryDTO);
 
-    List<CategoryDTO> getAllCategories();
-
-    CategoryDTO getCategoryDTOById(Long id);
+//    List<CategoryDTO> getAllCategories();
+//
+//    CategoryDTO getCategoryDTOById(Long id);
 
     void deleteCategory(Long id);
 

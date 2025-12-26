@@ -13,7 +13,7 @@ import com.ravi.orbit.entity.SizeGroup;
 
 import java.util.List;
 
-public interface ModifierService {
+public interface IModifierService {
 
     SizeGroupDTO handleSizeGroup(SizeGroupDTO sizeGroupDTO);
     ColorGroupDTO handleColorGroup(ColorGroupDTO colorGroupDTO);
@@ -31,8 +31,6 @@ public interface ModifierService {
     List<ColorDTO> getColorsByColorGroupId(Long colorGroupId);
     SizeGroupDTO getSizeGroupDTOById(Long id);
     ColorGroupDTO getColorGroupDTOById(Long id);
-    ProductSizeGroup getProductSizeGroupByProductId(Long productId);
-    ProductColorGroup getProductColorGroupByProductId(Long productId);
     ProductSizeGroup getProductSizeGroupByProductIdAndSizeGroupId(Long productId, Long sizeGroupId);
     ProductColorGroup getProductColorGroupByProductIdAndColorGroupId(Long productId, Long colorGroupId);
     SizeGroup getSizeGroupById(Long id);

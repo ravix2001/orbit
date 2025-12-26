@@ -15,20 +15,20 @@ public class CategoryController {
 
     private final ICategoryService categoryService;
 
-    @GetMapping("/all")
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        return ResponseEntity.ok(categoryService.getAllCategories());
-    }
-
     @PostMapping("/handleCategory")
     public ResponseEntity<CategoryDTO> handleCategory(@RequestBody CategoryDTO categoryDTO) {
         return ResponseEntity.ok(categoryService.handleCategory(categoryDTO));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CategoryDTO> getCategoryDTOById(@PathVariable Long id) {
-        return ResponseEntity.ok(categoryService.getCategoryDTOById(id));
-    }
+//    @GetMapping("/all")
+//    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
+//        return ResponseEntity.ok(categoryService.getAllCategories());
+//    }
+
+//    @GetMapping("/{id}")
+//    public ResponseEntity<CategoryDTO> getCategoryDTOById(@PathVariable Long id) {
+//        return ResponseEntity.ok(categoryService.getCategoryDTOById(id));
+//    }
 
     @DeleteMapping("/deleteCategory/{id}")
     public ResponseEntity<?> deleteCategory(@PathVariable Long id) {

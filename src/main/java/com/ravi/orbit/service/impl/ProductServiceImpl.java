@@ -3,7 +3,6 @@ package com.ravi.orbit.service.impl;
 import com.ravi.orbit.dto.*;
 import com.ravi.orbit.entity.Category;
 import com.ravi.orbit.entity.Product;
-import com.ravi.orbit.entity.ProductSizeGroup;
 import com.ravi.orbit.entity.Seller;
 import com.ravi.orbit.enums.EStatus;
 import com.ravi.orbit.exceptions.BadRequestException;
@@ -13,17 +12,13 @@ import com.ravi.orbit.service.IProductService;
 import com.ravi.orbit.service.ISellerService;
 import com.ravi.orbit.utils.CommonMethods;
 import com.ravi.orbit.utils.MyConstants;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Transactional
 @Service
@@ -58,19 +53,23 @@ public class ProductServiceImpl implements IProductService {
         return productDTO;
     }
 
-    @Override
-    public Page<ProductDTO> getAllProducts(Pageable pageable) {
-        return productRepository.getAllProducts(pageable);
-    }
-
-    @Override
-    public ProductDTO getProduct(Long id){
-        ProductDTO productDTO = getProductDTOById(id);
-        ProductSizeGroup productSizeGroup = get
-        productDTO.setSizes();
-        productDTO.setColors();
-        return productDTO;
-    }
+//    @Override
+//    public Page<ProductDTO> getAllProducts(Pageable pageable) {
+//        return productRepository.getAllProducts(pageable);
+//    }
+//
+//    @Override
+//    public ProductDTO getProduct(Long id){
+//
+//        ProductDTO productDTO = getProductDTOById(id);
+//
+//        SizeGroupDTO sizeGroupDTO = modifierService.getSizeGroupByProductId(id);
+//        ColorGroupDTO colorGroupDTO = modifierService.getColorGroupByProductId(id);
+//
+//        productDTO.setSizes(sizeGroupDTO.getSizes());
+//        productDTO.setColors(colorGroupDTO.getColors());
+//        return productDTO;
+//    }
 
     @Override
     public ProductDTO getProductDTOById(Long id) {
@@ -79,17 +78,17 @@ public class ProductServiceImpl implements IProductService {
                         .ERR_MSG_NOT_FOUND + "Product: " + id));
     }
 
-    @Override
-    public ProductDTO getProductDTOByProductId(String productId) {
-        return productRepository.getProductDTOByProductId(productId)
-                .orElseThrow(() -> new BadRequestException(MyConstants
-                        .ERR_MSG_NOT_FOUND + "Product: " + productId));
-    }
+//    @Override
+//    public ProductDTO getProductDTOByProductId(String productId) {
+//        return productRepository.getProductDTOByProductId(productId)
+//                .orElseThrow(() -> new BadRequestException(MyConstants
+//                        .ERR_MSG_NOT_FOUND + "Product: " + productId));
+//    }
 
-    @Override
-    public List<ProductDTO> getProductDTOsByName(String name) {
-        return productRepository.getProductDTOsByName(name);
-    }
+//    @Override
+//    public List<ProductDTO> getProductDTOsByName(String name) {
+//        return productRepository.getProductDTOsByName(name);
+//    }
 
     @Override
     public void deleteProduct(Long id) {
