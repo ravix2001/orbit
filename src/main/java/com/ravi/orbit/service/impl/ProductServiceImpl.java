@@ -13,12 +13,8 @@ import com.ravi.orbit.service.ISellerService;
 import com.ravi.orbit.utils.CommonMethods;
 import com.ravi.orbit.utils.MyConstants;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Transactional
 @Service
@@ -119,7 +115,7 @@ public class ProductServiceImpl implements IProductService {
         product.setDiscountPercent(productDTO.getDiscountPercent());
         product.setDiscountAmount((productDTO.getMarketPrice() * productDTO.getDiscountPercent() / 100));
         product.setSellingPrice(productDTO.getMarketPrice() - (productDTO.getMarketPrice() * productDTO.getDiscountPercent() / 100) );
-        product.setImgUrl(productDTO.getImgUrl());
+        product.setImageUrl(productDTO.getImageUrl());
 
         return product;
     }

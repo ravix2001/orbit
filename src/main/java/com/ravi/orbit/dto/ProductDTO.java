@@ -14,7 +14,7 @@ public class ProductDTO {
 
     public ProductDTO(Long id, String productId, String name, String brand, String description,
                       EStatus status, Integer quantity, Double marketPrice, Double discountPercent,
-                      Double discountAmount, Double sellingPrice, String imgUrl) {
+                      Double discountAmount, Double sellingPrice, String imageUrl) {
         this.id = id;
         this.productId = productId;
         this.name = name;
@@ -26,12 +26,12 @@ public class ProductDTO {
         this.discountPercent = discountPercent;
         this.discountAmount = discountAmount;
         this.sellingPrice = sellingPrice;
-        this.imgUrl = imgUrl;
+        this.imageUrl = imageUrl;
     }
 
     public ProductDTO(Long id, String name, String brand, String description,
                       Double marketPrice, Double discountPercent, Double discountAmount,
-                      Double sellingPrice, String imgUrl, Long categoryId) {
+                      Double sellingPrice, String imageUrl, Long categoryId) {
         this.id = id;
         this.name = name;
         this.brand = brand;
@@ -40,7 +40,7 @@ public class ProductDTO {
         this.discountPercent = discountPercent;
         this.discountAmount = discountAmount;
         this.sellingPrice = sellingPrice;
-        this.imgUrl = imgUrl;
+        this.imageUrl = imageUrl;
         this.categoryId = categoryId;
     }
 
@@ -57,7 +57,7 @@ public class ProductDTO {
     private Double sellingPrice;
     private List<ColorDTO> colors;
     private List<SizeDTO> sizes;
-    private String imgUrl;
+    private String imageUrl;
 
     private Long categoryId;
     private Long sellerId;
