@@ -111,6 +111,7 @@ public class ProductServiceImpl implements IProductService {
         product.setCode(productDTO.getCode());
         product.setName(productDTO.getName());
         product.setBrand(productDTO.getBrand());
+        product.setFeatures(productDTO.getFeatures());
         product.setDescription(productDTO.getDescription());
         product.setQuantity(productDTO.getQuantity());
         product.setMarketPrice(productDTO.getMarketPrice());

@@ -202,7 +202,7 @@ public class UserServiceImpl implements IUserService {
         user.setEmail(userDTO.getEmail());
         user.setGender(userDTO.getGender());
         user.setDob(userDTO.getDob());
-        user.setImgURL(userDTO.getImgURL());
+        user.setImageUrl(userDTO.getImageUrl());
         // address
         user.setAddress(userDTO.getAddress());
         user.setZipcode(userDTO.getZipcode());
@@ -225,7 +225,7 @@ public class UserServiceImpl implements IUserService {
         userDTO.setDob(user.getDob());
         userDTO.setRole(user.getRole());
         userDTO.setStatus(user.getStatus());
-        userDTO.setImgURL(user.getImgURL());
+        userDTO.setImageUrl(user.getImageUrl());
         // address
         userDTO.setAddress(user.getAddress());
         userDTO.setZipcode(user.getZipcode());

@@ -12,22 +12,22 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository <User, Long> {
 
-    @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, u.phone, u.email, " +
-            " u.username, u.gender, u.dob, u.role, u.status, u.imgURL, " +
+    @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, " +
+            "u.phone, u.email, u.username, u.gender, u.dob, u.role, u.status, u.imageUrl, " +
             " u.address, u.zipcode, u.state, u.countryCode ) " +
             " FROM User u " +
             "WHERE u.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
     Page<UserDTO> getAllUsers(Pageable pageable);
 
-    @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, u.phone, u.email, " +
-            " u.username, u.gender, u.dob, u.role, u.status, u.imgURL, " +
+    @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, " +
+            "u.phone, u.email, u.username, u.gender, u.dob, u.role, u.status, u.imageUrl, " +
             " u.address, u.zipcode, u.state, u.countryCode ) " +
             " FROM User u " +
             " WHERE u.id = :id ")
     Optional<UserDTO> getUserDTOById(Long id);
 
-    @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, u.phone, u.email, " +
-            " u.username, u.gender, u.dob, u.role, u.status, u.imgURL, " +
+    @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, " +
+            "u.phone, u.email, u.username, u.gender, u.dob, u.role, u.status, u.imageUrl, " +
             " u.address, u.zipcode, u.state, u.countryCode ) " +
             " FROM User u " +
             " WHERE u.username = :username ")
