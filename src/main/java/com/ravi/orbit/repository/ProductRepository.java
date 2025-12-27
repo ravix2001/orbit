@@ -12,25 +12,25 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.productId, p.name, p.brand, p.description, " +
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.code, p.name, p.brand, p.description, " +
             "p.status, p.quantity, p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice, p.imageUrl ) " +
             " FROM Product p" +
             " WHERE p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
     Page<ProductDTO> getAllProducts(Pageable pageable);
 
-    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.productId, p.name, p.brand, p.description, " +
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.code, p.name, p.brand, p.description, " +
             "p.status, p.quantity, p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice, p.imageUrl ) " +
             " FROM Product p" +
             " WHERE p.id = :id")
     Optional<ProductDTO> getProductDTOById(Long id);
 
-    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.productId, p.name, p.brand, p.description, " +
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.code, p.name, p.brand, p.description, " +
             "p.status, p.quantity, p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice, p.imageUrl ) " +
             " FROM Product p" +
             " WHERE p.id = :productId")
     Optional<ProductDTO> getProductDTOByProductId(String productId);
 
-    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.productId, p.name, p.brand, p.description, " +
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.code, p.name, p.brand, p.description, " +
             "p.status, p.quantity, p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice, p.imageUrl ) " +
             " FROM Product p" +
             " WHERE p.name = :name AND p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")

@@ -106,7 +106,7 @@ public class ProductServiceImpl implements IProductService {
                         .ERR_MSG_NOT_FOUND + "Product: " + id));
     }
     private Product mapToProductEntity(Product product, ProductDTO productDTO) {
-        product.setProductId(productDTO.getProductId());
+        product.setCode(productDTO.getCode());
         product.setName(productDTO.getName());
         product.setBrand(productDTO.getBrand());
         product.setDescription(productDTO.getDescription());

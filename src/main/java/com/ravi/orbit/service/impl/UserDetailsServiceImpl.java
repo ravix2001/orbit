@@ -52,20 +52,21 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         // If neither found, throw an exception
         log.warn("User not found: {}", username);
-        throw new UsernameNotFoundException("User not found with username: " + username);
+        throw new BadRequestException(MyConstants
+                .ERR_MSG_NOT_FOUND + "User: " + username);
 
     }
 
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new BadRequestException(MyConstants
-                        .ERR_MSG_NOT_FOUND + "User: " + username));
-    }
-
-    public Seller getSellerByUsername(String username) {
-        return sellerRepository.findByUsername(username)
-                .orElseThrow(() -> new BadRequestException(MyConstants
-                        .ERR_MSG_NOT_FOUND + "Seller: " + username));
-    }
+//    public User getUserByUsername(String username) {
+//        return userRepository.findByUsername(username)
+//                .orElseThrow(() -> new BadRequestException(MyConstants
+//                        .ERR_MSG_NOT_FOUND + "User: " + username));
+//    }
+//
+//    public Seller getSellerByUsername(String username) {
+//        return sellerRepository.findByUsername(username)
+//                .orElseThrow(() -> new BadRequestException(MyConstants
+//                        .ERR_MSG_NOT_FOUND + "Seller: " + username));
+//    }
 
 }
