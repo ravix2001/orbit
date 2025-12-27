@@ -32,7 +32,7 @@ public class PublicController {
     @GetMapping("/categories/all")
     public ResponseEntity<Page<CategoryDTO>> getAllCategories(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "true") boolean ascending) {
 
@@ -50,7 +50,7 @@ public class PublicController {
     public ResponseEntity<Page<ProductDTO>> getProductDTOsByCategoryId(
             @PathVariable Long categoryId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "true") boolean ascending) {
 
@@ -62,7 +62,7 @@ public class PublicController {
     @GetMapping("/products/all")
     public ResponseEntity<Page<ProductDTO>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "true") boolean ascending) {
 
@@ -80,7 +80,7 @@ public class PublicController {
     public ResponseEntity<Page<ProductDTO>> getProductsByName(
             @RequestParam String name,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "true") boolean ascending) {
 
@@ -93,7 +93,7 @@ public class PublicController {
     public ResponseEntity<Page<ProductDTO>> getProductsBySellerId(
             @RequestParam Long sellerId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "true") boolean ascending) {
 

@@ -59,8 +59,8 @@ public class Seller {
     @Column(name = "seller_status")
     private EStatus status = EStatus.PENDING;
 
-    @Column(name = "img_url")
-    private String imgURL;
+    @Column(name = "image_url")
+    private String imageUrl;
 
     // address
     @Column(name = "address")

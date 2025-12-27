@@ -143,7 +143,7 @@ public class SellerServiceImpl implements ISellerService {
         seller.setEmail(sellerDTO.getEmail());
         seller.setGender(sellerDTO.getGender());
         seller.setDob(sellerDTO.getDob());
-        seller.setImgURL(sellerDTO.getImgURL());
+        seller.setImageUrl(sellerDTO.getImageUrl());
         // address
         seller.setAddress(sellerDTO.getAddress());
         seller.setZipcode(sellerDTO.getZipcode());
@@ -168,7 +168,7 @@ public class SellerServiceImpl implements ISellerService {
         sellerDTO.setDob(seller.getDob());
         sellerDTO.setRole(seller.getRole());
         sellerDTO.setStatus(seller.getStatus());
-        sellerDTO.setImgURL(seller.getImgURL());
+        sellerDTO.setImageUrl(seller.getImageUrl());
         // address
         sellerDTO.setAddress(seller.getAddress());
         sellerDTO.setZipcode(seller.getZipcode());

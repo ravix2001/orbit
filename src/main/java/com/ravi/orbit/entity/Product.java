@@ -25,6 +25,9 @@ public class Product {
     @Column(name = "brand")
     private String brand;
 
+    @Column(name = "features")
+    private String features;
+
     @Column(name = "description")
     private String description;
 
