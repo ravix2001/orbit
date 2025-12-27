@@ -30,8 +30,15 @@ public class PublicController {
     }
 
     @GetMapping("/categories/all")
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        return ResponseEntity.ok(publicService.getAllCategories());
+    public ResponseEntity<Page<CategoryDTO>> getAllCategories(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(publicService.getAllCategories(pageable));
     }
 
     @GetMapping("/category/{id}")
@@ -40,11 +47,19 @@ public class PublicController {
     }
 
     @GetMapping("/products/{categoryId}")
-    public ResponseEntity<List<ProductDTO>> getProductDTOsByCategoryId(@PathVariable Long categoryId) {
-        return ResponseEntity.ok(publicService.getProductDTOsByCategoryId(categoryId));
+    public ResponseEntity<Page<ProductDTO>> getProductDTOsByCategoryId(
+            @PathVariable Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(publicService.getProductDTOsByCategoryId(pageable, categoryId));
     }
 
-    @GetMapping("/products/paginated")
+    @GetMapping("/products/all")
     public ResponseEntity<Page<ProductDTO>> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
@@ -62,8 +77,29 @@ public class PublicController {
     }
 
     @GetMapping("/product")
-    public ResponseEntity<List<ProductDTO>> getProductsByName(@RequestParam String name) {
-        return ResponseEntity.ok(publicService.getProductDTOsByName(name));
+    public ResponseEntity<Page<ProductDTO>> getProductsByName(
+            @RequestParam String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(publicService.getProductDTOsByName(pageable, name));
+    }
+
+    @GetMapping("/seller")
+    public ResponseEntity<Page<ProductDTO>> getProductsBySellerId(
+            @RequestParam Long sellerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(publicService.getProductDTOsBySellerId(pageable, sellerId));
     }
 
 }

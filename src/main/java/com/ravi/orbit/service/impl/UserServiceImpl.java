@@ -14,6 +14,8 @@ import com.ravi.orbit.utils.MyConstants;
 import com.ravi.orbit.utils.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -132,8 +134,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
-        return userRepository.getAllUsers();
+    public Page<UserDTO> getAllUsers(Pageable pageable) {
+        return userRepository.getAllUsers(pageable);
     }
 
     @Override

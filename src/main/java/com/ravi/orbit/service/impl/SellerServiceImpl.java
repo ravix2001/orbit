@@ -14,6 +14,8 @@ import com.ravi.orbit.utils.MyConstants;
 import com.ravi.orbit.utils.Validator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -74,8 +76,8 @@ public class SellerServiceImpl implements ISellerService {
     }
 
     @Override
-    public List<SellerDTO> getAllSellers() {
-        return sellerRepository.getAllSellers();
+    public Page<SellerDTO> getAllSellers(Pageable pageable) {
+        return sellerRepository.getAllSellers(pageable);
     }
 
     @Override

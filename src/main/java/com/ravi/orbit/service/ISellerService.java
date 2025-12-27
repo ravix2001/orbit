@@ -3,6 +3,8 @@ package com.ravi.orbit.service;
 import com.ravi.orbit.dto.AuthPayload;
 import com.ravi.orbit.dto.SellerDTO;
 import com.ravi.orbit.entity.Seller;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -14,7 +16,7 @@ public interface ISellerService {
 
     SellerDTO updateSeller(SellerDTO sellerDTO, String username);
 
-    List<SellerDTO> getAllSellers();
+    Page<SellerDTO> getAllSellers(Pageable pageable);
 
     SellerDTO getSellerDTOById(Long sellerId);
 

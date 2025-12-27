@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -106,7 +108,7 @@ public class ProductServiceImpl implements IProductService {
                         .ERR_MSG_NOT_FOUND + "Product: " + id));
     }
     private Product mapToProductEntity(Product product, ProductDTO productDTO) {
-        product.setProductId(productDTO.getProductId());
+        product.setCode(productDTO.getCode());
         product.setName(productDTO.getName());
         product.setBrand(productDTO.getBrand());
         product.setDescription(productDTO.getDescription());
