@@ -30,8 +30,8 @@ public class PublicServiceImpl implements IPublicService {
     private final CategoryRepository categoryRepository;
 
     @Override
-    public List<CategoryDTO> getAllCategories() {
-        return categoryRepository.getAllCategories();
+    public Page<CategoryDTO> getAllCategories(Pageable pageable) {
+        return categoryRepository.getAllCategories(pageable);
     }
 
     @Override
@@ -42,8 +42,8 @@ public class PublicServiceImpl implements IPublicService {
     }
 
     @Override
-    public List<ProductDTO> getProductDTOsByCategoryId(Long categoryId){
-        return productRepository.getProductDTOsByCategoryId(categoryId);
+    public Page<ProductDTO> getProductDTOsByCategoryId(Pageable pageable, Long categoryId){
+        return productRepository.getProductDTOsByCategoryId(pageable, categoryId);
     }
 
     @Override
@@ -69,8 +69,13 @@ public class PublicServiceImpl implements IPublicService {
     }
 
     @Override
-    public List<ProductDTO> getProductDTOsByName(String name) {
-        return productRepository.getProductDTOsByName(name);
+    public Page<ProductDTO> getProductDTOsByName(Pageable pageable, String name) {
+        return productRepository.getProductDTOsByName(pageable, name);
+    }
+
+    @Override
+    public Page<ProductDTO> getProductDTOsBySellerId(Pageable pageable, Long sellerId) {
+        return productRepository.getProductDTOsBySellerId(pageable, sellerId);
     }
 
 }

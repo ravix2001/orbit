@@ -2,6 +2,8 @@ package com.ravi.orbit.repository;
 
 import com.ravi.orbit.dto.SellerDTO;
 import com.ravi.orbit.entity.Seller;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,7 +17,7 @@ public interface SellerRepository extends JpaRepository <Seller, Long> {
             " s.address, s.zipcode, s.state, s.countryCode, s.citizenNumber, s.nid, s.pan ) " +
             " FROM Seller s " +
             " WHERE s.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
-    List<SellerDTO> getAllSellers();
+    Page<SellerDTO> getAllSellers(Pageable pageable);
 
     @Query("SELECT NEW com.ravi.orbit.dto.SellerDTO(s.id, s.firstName, s.middleName, s.lastName, s.phone, s.email, " +
             " s.username, s.gender, s.dob, s.role, s.status, s.imgURL, " +

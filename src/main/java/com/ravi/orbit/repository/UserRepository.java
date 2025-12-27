@@ -2,6 +2,8 @@ package com.ravi.orbit.repository;
 
 import com.ravi.orbit.dto.UserDTO;
 import com.ravi.orbit.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -15,7 +17,7 @@ public interface UserRepository extends JpaRepository <User, Long> {
             " u.address, u.zipcode, u.state, u.countryCode ) " +
             " FROM User u " +
             "WHERE u.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
-    List<UserDTO> getAllUsers();
+    Page<UserDTO> getAllUsers(Pageable pageable);
 
     @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, u.phone, u.email, " +
             " u.username, u.gender, u.dob, u.role, u.status, u.imgURL, " +

@@ -9,16 +9,18 @@ import java.util.List;
 
 public interface IPublicService {
 
-    List<CategoryDTO> getAllCategories();
+    Page<CategoryDTO> getAllCategories(Pageable pageable);
 
     CategoryDTO getCategoryDTOById(Long id);
 
-    List<ProductDTO> getProductDTOsByCategoryId(Long categoryId);
+    Page<ProductDTO> getProductDTOsByCategoryId(Pageable pageable, Long categoryId);
 
     Page<ProductDTO> getAllProducts(Pageable pageable);
 
     ProductDTO getProduct(Long id);
 
-    List<ProductDTO> getProductDTOsByName(String name);
+    Page<ProductDTO> getProductDTOsByName(Pageable pageable, String name);
+
+    Page<ProductDTO> getProductDTOsBySellerId(Pageable pageable, Long sellerId);
 
 }

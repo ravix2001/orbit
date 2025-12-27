@@ -28,18 +28,24 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "p.status, p.quantity, p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice, p.imageUrl ) " +
             " FROM Product p" +
             " WHERE p.id = :productId")
-    Optional<ProductDTO> getProductDTOByProductId(String productId);
+    Optional<ProductDTO> getProductDTOByCode(String code);
 
     @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.code, p.name, p.brand, p.description, " +
             "p.status, p.quantity, p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice, p.imageUrl ) " +
             " FROM Product p" +
             " WHERE p.name = :name AND p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
-    List<ProductDTO> getProductDTOsByName(String name);
+    Page<ProductDTO> getProductDTOsByName(Pageable pageable, String name);
 
     @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, p.marketPrice," +
             "p.discountPercent, p.discountAmount, p.sellingPrice, p.imageUrl, p.categoryId) " +
             " FROM Product p" +
             " WHERE p.categoryId = :categoryId AND p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
-    List<ProductDTO> getProductDTOsByCategoryId(Long categoryId);
+    Page<ProductDTO> getProductDTOsByCategoryId(Pageable pageable, Long categoryId);
+
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, p.marketPrice," +
+            "p.discountPercent, p.discountAmount, p.sellingPrice, p.imageUrl, p.categoryId) " +
+            " FROM Product p" +
+            " WHERE p.sellerId = :sellerId AND p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
+    Page<ProductDTO> getProductDTOsBySellerId(Pageable pageable, Long sellerId);
 
 }
