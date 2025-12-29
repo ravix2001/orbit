@@ -12,38 +12,40 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductDTO {
 
-    public ProductDTO(Long id, String code, String name, String brand, String features, String description,
-                      EStatus status, Integer quantity, Double marketPrice, Double discountPercent,
-                      Double discountAmount, Double sellingPrice, String imageUrl) {
+    public ProductDTO(Long id, String code, String name, String brand, EStatus status, String features, String description,
+                      Integer quantity, Double marketPrice, Double discountPercent, Double discountAmount,
+                      Double sellingPrice, Long categoryId, Long sellerId, String imageUrl) {
         this.id = id;
         this.code = code;
         this.name = name;
         this.brand = brand;
+        this.status = status;
         this.features = features;
         this.description = description;
-        this.status = status;
         this.quantity = quantity;
         this.marketPrice = marketPrice;
         this.discountPercent = discountPercent;
         this.discountAmount = discountAmount;
         this.sellingPrice = sellingPrice;
+        this.categoryId = categoryId;
+        this.sellerId = sellerId;
         this.imageUrl = imageUrl;
     }
 
-    public ProductDTO(Long id, String name, String brand, String features, String description,
+    public ProductDTO(Long id, String name, String brand, String description,
                       Double marketPrice, Double discountPercent, Double discountAmount,
-                      Double sellingPrice, String imageUrl, Long categoryId) {
+                      Double sellingPrice, Long categoryId, Long sellerId, String imageUrl) {
         this.id = id;
         this.name = name;
         this.brand = brand;
-        this.features = features;
         this.description = description;
         this.marketPrice = marketPrice;
         this.discountPercent = discountPercent;
         this.discountAmount = discountAmount;
         this.sellingPrice = sellingPrice;
-        this.imageUrl = imageUrl;
         this.categoryId = categoryId;
+        this.sellerId = sellerId;
+        this.imageUrl = imageUrl;
     }
 
     private Long id;
@@ -64,5 +66,8 @@ public class ProductDTO {
 
     private Long categoryId;
     private Long sellerId;
+
+    private String categoryName;
+    private String sellerName;
 
 }

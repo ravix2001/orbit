@@ -1,13 +1,13 @@
 package com.ravi.orbit.service.impl;
 
 import com.ravi.orbit.dto.CategoryDTO;
-import com.ravi.orbit.dto.ColorGroupDTO;
+import com.ravi.orbit.dto.ColorDTO;
 import com.ravi.orbit.dto.ProductDTO;
-import com.ravi.orbit.dto.SizeGroupDTO;
+import com.ravi.orbit.dto.SizeDTO;
 import com.ravi.orbit.exceptions.BadRequestException;
 import com.ravi.orbit.repository.CategoryRepository;
 import com.ravi.orbit.repository.ProductRepository;
-import com.ravi.orbit.service.IModifierService;
+//import com.ravi.orbit.service.IModifierService;
 import com.ravi.orbit.service.IProductService;
 import com.ravi.orbit.service.IPublicService;
 import com.ravi.orbit.utils.MyConstants;
@@ -25,7 +25,8 @@ import java.util.List;
 public class PublicServiceImpl implements IPublicService {
 
     private final IProductService productService;
-    private final IModifierService modifierService;
+//    private final IModifierService modifierService;
+
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
 
@@ -42,11 +43,6 @@ public class PublicServiceImpl implements IPublicService {
     }
 
     @Override
-    public Page<ProductDTO> getProductDTOsByCategoryId(Pageable pageable, Long categoryId){
-        return productRepository.getProductDTOsByCategoryId(pageable, categoryId);
-    }
-
-    @Override
     public Page<ProductDTO> getAllProducts(Pageable pageable) {
         return productRepository.getAllProducts(pageable);
     }
@@ -56,13 +52,13 @@ public class PublicServiceImpl implements IPublicService {
 
         ProductDTO productDTO = productService.getProductDTOById(id);
 
-        SizeGroupDTO sizeGroupDTO = modifierService.getSizeGroupByProductId(id);
-        if(sizeGroupDTO != null){
-            productDTO.setSizes(sizeGroupDTO.getSizes());
+        List<SizeDTO> sizes = productService.getSizeDTOsByProductId(id);
+        if(sizes != null){
+            productDTO.setSizes(sizes);
         }
-        ColorGroupDTO colorGroupDTO = modifierService.getColorGroupByProductId(id);
-        if(colorGroupDTO != null){
-            productDTO.setColors(colorGroupDTO.getColors());
+        List<ColorDTO> colors = productService.getColorDTOsByProductId(id);
+        if(colors != null){
+            productDTO.setColors(colors);
         }
 
         return productDTO;
@@ -71,6 +67,11 @@ public class PublicServiceImpl implements IPublicService {
     @Override
     public Page<ProductDTO> getProductDTOsByName(Pageable pageable, String name) {
         return productRepository.getProductDTOsByName(pageable, name);
+    }
+
+    @Override
+    public Page<ProductDTO> getProductDTOsByCategoryId(Pageable pageable, Long categoryId){
+        return productRepository.getProductDTOsByCategoryId(pageable, categoryId);
     }
 
     @Override
