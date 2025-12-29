@@ -29,10 +29,17 @@ public class Size {
     @Column(name = "isAvailable")
     private boolean isAvailable;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "size_group_id", referencedColumnName = "id")
-    private SizeGroup sizeGroup;
+    @Column(name = "price")
+    private Double price;
 
-    @Column(name = "size_group_id", insertable = false, updatable = false)
-    private Long sizeGroupId;
+    @Column(name = "quantity")
+    private Integer quantity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+
+    @Column(name = "product_id", insertable = false, updatable = false)
+    private Long productId;
+
 }

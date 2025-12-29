@@ -1,6 +1,8 @@
 package com.ravi.orbit.service;
 
+import com.ravi.orbit.dto.ColorDTO;
 import com.ravi.orbit.dto.ProductDTO;
+import com.ravi.orbit.dto.SizeDTO;
 import com.ravi.orbit.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,5 +28,9 @@ public interface IProductService {
     void deleteProductHard(Long id);
 
     Product getProductById(Long id);
+
+    List<SizeDTO> getSizeDTOsByProductId(Long productId);
+
+    List<ColorDTO> getColorDTOsByProductId(Long productId);
 
 }

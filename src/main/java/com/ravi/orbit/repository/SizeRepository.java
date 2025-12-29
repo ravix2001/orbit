@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface SizeRepository extends JpaRepository<Size, Long> {
 
-    @Query("SELECT NEW com.ravi.orbit.dto.SizeDTO(s.id, s.size, s.isAvailable)" +
+    @Query("SELECT NEW com.ravi.orbit.dto.SizeDTO(s.id, s.size, s.isAvailable, s.price, s.quantity, s.productId)" +
             " FROM Size s" +
-            " WHERE s.sizeGroupId = :sizeGroupId ")
-    List<SizeDTO> getSizeDTOsBySizeGroupId(Long sizeGroupId);
+            " WHERE s.productId = :productId ")
+    List<SizeDTO> getSizeDTOsByProductId(Long productId);
 
 }
