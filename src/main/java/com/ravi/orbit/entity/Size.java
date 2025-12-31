@@ -27,7 +27,7 @@ public class Size {
     private String size;
 
     @Column(name = "isAvailable")
-    private boolean isAvailable;
+    private boolean isAvailable = true;
 
     @Column(name = "price")
     private Double price;
