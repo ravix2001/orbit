@@ -1,11 +1,12 @@
 package com.ravi.orbit.service.impl;
 
-import com.ravi.orbit.dto.AuthPayload;
+import com.ravi.orbit.dto.AuthDTO;
 import com.ravi.orbit.dto.UserDTO;
+import com.ravi.orbit.entity.RefreshToken;
 import com.ravi.orbit.entity.User;
-import com.ravi.orbit.enums.ERole;
 import com.ravi.orbit.enums.EStatus;
 import com.ravi.orbit.exceptions.BadRequestException;
+import com.ravi.orbit.repository.RefreshTokenRepository;
 import com.ravi.orbit.repository.UserRepository;
 import com.ravi.orbit.service.IUserService;
 import com.ravi.orbit.utils.CommonMethods;
@@ -16,13 +17,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +29,10 @@ import java.util.List;
 public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
-    private final AuthenticationManager authenticationManager;
-    private final UserDetailsServiceImpl userDetailsServiceImpl;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    // handle user for admin controller
     @Override
     public UserDTO handleUser(UserDTO userDTO) {
 
@@ -57,9 +54,9 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public AuthPayload userSignup(UserDTO userDTO) {
+    public AuthDTO userSignup(UserDTO userDTO) {
         Validator.validateUserSignup(userDTO);
-        AuthPayload response = new AuthPayload();
+        AuthDTO response = new AuthDTO();
 
         User user = new User();
 
@@ -71,58 +68,44 @@ public class UserServiceImpl implements IUserService {
         String accessToken = jwtUtil.generateJwtToken(userDTO.getPhone());
         String refreshToken = jwtUtil.generateRefreshToken(userDTO.getPhone());
 
+        RefreshToken refreshTokenEntity = new RefreshToken();
+        refreshTokenEntity.setToken(refreshToken);
+        refreshTokenEntity.setUsername(userDTO.getUsername());
+        refreshTokenEntity.setExpiryDate(LocalDateTime.now().plusDays(7));
+        refreshTokenRepository.save(refreshTokenEntity);
+
         response.setAccessToken(accessToken);
         response.setRefreshToken(refreshToken);
         return response;
     }
 
     @Override
-    public AuthPayload userLoginNew(UserDTO loginRequest) {
-        AuthPayload response = new AuthPayload();
-        UserDTO auth = getUserAuthByUsername(loginRequest.getUsername());
+    public AuthDTO userLogin(UserDTO userDTO) {
 
-        if(passwordEncoder.matches(loginRequest.getPassword(), auth.getPassword())){
-            String accessToken = jwtUtil.generateJwtToken(loginRequest.getUsername());
-            String refreshToken = jwtUtil.generateRefreshToken(loginRequest.getUsername());
-            response.setAccessToken(accessToken);
-            response.setRefreshToken(refreshToken);
+        UserDTO auth = getUserAuthByUsername(userDTO.getUsername());
+
+        if (!passwordEncoder.matches(userDTO.getPassword(), auth.getPassword())) {
+            throw new BadCredentialsException("Invalid username or password");
         }
+
+        AuthDTO response = new AuthDTO();
+
+        String accessToken = jwtUtil.generateJwtToken(auth.getUsername());
+        String refreshToken = jwtUtil.generateRefreshToken(auth.getUsername());
+
+        RefreshToken refreshTokenEntity = new RefreshToken();
+        refreshTokenEntity.setToken(refreshToken);
+        refreshTokenEntity.setUsername(userDTO.getUsername());
+        refreshTokenEntity.setExpiryDate(LocalDateTime.now().plusDays(7));
+        refreshTokenRepository.save(refreshTokenEntity);
+
+        response.setAccessToken(accessToken);
+        response.setRefreshToken(refreshToken);
+        response.setUserDTO(getUserDTOByUsername(auth.getUsername()));
 
         log.info("User {} successfully logged in", auth.getUsername());
 
-        response.setUserDTO(getUserDTOByUsername(auth.getUsername()));
         return response;
-    }
-
-    @Override
-    public AuthPayload userLoginOld(UserDTO userDTO) {
-        try {
-            AuthPayload response = new AuthPayload();
-
-            // Create a user object and set credentials from the login DTO
-            User user = new User();
-            user.setUsername(userDTO.getUsername());
-            user.setPassword(userDTO.getPassword());
-
-            // Authenticate the user
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
-
-            // Load user details from the UserDetailsService implementation
-            UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(user.getUsername());
-
-            String accessToken = jwtUtil.generateJwtToken(userDetails.getUsername());
-            String refreshToken = jwtUtil.generateRefreshToken(userDetails.getUsername());
-            response.setAccessToken(accessToken);
-            response.setRefreshToken(refreshToken);
-            response.setUserDTO(mapToUserDTO(userDTO, user));
-
-            log.info("User {} successfully logged in", user.getUsername());
-
-            return response;
-        } catch (Exception e) {
-            log.error("Error logging in user: {}", e.getMessage());
-            throw new BadRequestException(e.getMessage());
-        }
     }
 
     @Override
@@ -212,28 +195,6 @@ public class UserServiceImpl implements IUserService {
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
         return user;
-    }
-
-    public UserDTO mapToUserDTO (UserDTO userDTO, User user) {
-        userDTO.setFirstName(user.getFirstName());
-        userDTO.setMiddleName(user.getMiddleName());
-        userDTO.setLastName(user.getLastName());
-        userDTO.setUsername(user.getPhone());
-        userDTO.setPhone(user.getPhone());
-        userDTO.setEmail(user.getEmail());
-        userDTO.setGender(user.getGender());
-        userDTO.setDob(user.getDob());
-        userDTO.setRole(user.getRole());
-        userDTO.setStatus(user.getStatus());
-        userDTO.setImageUrl(user.getImageUrl());
-        // address
-        userDTO.setAddress(user.getAddress());
-        userDTO.setZipcode(user.getZipcode());
-        userDTO.setState(user.getState());
-        userDTO.setCountryCode(user.getCountryCode());
-        userDTO.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        return userDTO;
     }
 
 }

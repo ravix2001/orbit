@@ -1,18 +1,16 @@
 package com.ravi.orbit.service;
 
-import com.ravi.orbit.dto.AuthPayload;
+import com.ravi.orbit.dto.AuthDTO;
 import com.ravi.orbit.dto.SellerDTO;
 import com.ravi.orbit.entity.Seller;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface ISellerService {
 
-    AuthPayload sellerSignup(SellerDTO sellerDTO);
+    AuthDTO sellerSignup(SellerDTO sellerDTO);
 
-    AuthPayload sellerLogin(SellerDTO sellerDTO);
+    AuthDTO sellerLogin(SellerDTO sellerDTO);
 
     SellerDTO updateSeller(SellerDTO sellerDTO, String username);
 

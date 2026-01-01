@@ -1,17 +1,15 @@
 package com.ravi.orbit.controller;
 
 import com.ravi.orbit.dto.SellerDTO;
-import com.ravi.orbit.dto.AuthPayload;
+import com.ravi.orbit.dto.AuthDTO;
 import com.ravi.orbit.dto.UserDTO;
+import com.ravi.orbit.service.IAuthService;
 import com.ravi.orbit.service.ISellerService;
 import com.ravi.orbit.service.IUserService;
-import com.ravi.orbit.utils.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -20,55 +18,37 @@ import java.util.Map;
 public class AuthController {
 
     private final IUserService userService;
-
     private final ISellerService sellerService;
-
-    private final JwtUtil jwtUtil;
+    private final IAuthService authService;
 
     @PostMapping("/userSignup")
-    public ResponseEntity<AuthPayload> userSignup(@RequestBody UserDTO userDTO) {
+    public ResponseEntity<AuthDTO> userSignup(@RequestBody UserDTO userDTO) {
         return ResponseEntity.ok(userService.userSignup(userDTO));
     }
 
     @PostMapping("/sellerSignup")
-    public ResponseEntity<AuthPayload> sellerSignup(@RequestBody SellerDTO sellerDTO) {
+    public ResponseEntity<AuthDTO> sellerSignup(@RequestBody SellerDTO sellerDTO) {
         return ResponseEntity.ok(sellerService.sellerSignup(sellerDTO));
     }
 
     @PostMapping("/userLogin")
-    public ResponseEntity<AuthPayload> userLogin(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.userLoginNew(userDTO));
+    public ResponseEntity<AuthDTO> userLogin(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(userService.userLogin(userDTO));
     }
 
     @PostMapping("/sellerLogin")
-    public ResponseEntity<AuthPayload> sellerLogin(@RequestBody SellerDTO sellerDTO) {
+    public ResponseEntity<AuthDTO> sellerLogin(@RequestBody SellerDTO sellerDTO) {
         return ResponseEntity.ok(sellerService.sellerLogin(sellerDTO));
     }
 
-    // need to be reworked
-    @PostMapping("/refreshToken")
-    public ResponseEntity<Map<String, String>> refreshToken(@RequestBody Map<String, String> request) {
-        try {
-            String refreshToken = request.get("refreshToken");
+    @PostMapping("/refresh")
+    public ResponseEntity<?> refresh(@RequestHeader("Authorization") String authHeader) {
+        return ResponseEntity.ok(authService.refreshToken(authHeader));
+    }
 
-            if (refreshToken == null) throw new IllegalArgumentException("Refresh token is missing");
-
-            // validate the refresh token
-            String username = jwtUtil.extractUsername(refreshToken);
-            if (jwtUtil.isTokenExpired(refreshToken)) {
-                throw new IllegalArgumentException("Refresh token expired");
-            }
-
-            // Generate a new access token
-            String newAccessToken = jwtUtil.generateJwtToken(username);
-
-            return ResponseEntity.ok(Map.of("accessToken", newAccessToken));
-
-        } catch (Exception e) {
-            log.error("Error refreshing token: {}", e.getMessage());
-            return ResponseEntity.badRequest().body(null);
-        }
-
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
+        return ResponseEntity.ok(authService.logout(authHeader));
     }
 
 }
