@@ -22,9 +22,6 @@ public class JwtUtil {
     @Value("${jwt.secret.key}")
     private String secretKey;
 
-    private static final long JWT_TOKEN_VALIDITY = 1000 * 60 * 15;            // 15 minutes
-    private static final long REFRESH_TOKEN_VALIDITY = 1000 * 60 * 60 * 24 * 7; // 7 days
-
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
@@ -57,6 +54,11 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
+    public Boolean isRefreshToken(String token) {
+        Claims claims = extractAllClaims(token);
+        return "refresh".equals(claims.get("type"));
+    }
+
     public String createToken(Map<String, Object> claims, String subject, long expirationMillis) {
         return Jwts.builder()
                 .claims(claims)
@@ -72,13 +74,13 @@ public class JwtUtil {
     public String generateJwtToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "access");
-        return createToken(claims, username, JWT_TOKEN_VALIDITY);
+        return createToken(claims, username, MyConstants.JWT_TOKEN_VALIDITY);
     }
 
     public String generateRefreshToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "refresh");
-        return createToken(claims, username, REFRESH_TOKEN_VALIDITY);
+        return createToken(claims, username, MyConstants.REFRESH_TOKEN_VALIDITY);
     }
 
     public Boolean validateToken(String token) {

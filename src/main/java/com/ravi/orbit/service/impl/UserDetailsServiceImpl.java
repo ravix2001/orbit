@@ -21,7 +21,6 @@ import java.util.Optional;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserRepository userRepository;
-
     private final SellerRepository sellerRepository;
 
     @Override

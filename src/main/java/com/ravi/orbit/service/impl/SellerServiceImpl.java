@@ -1,12 +1,12 @@
 package com.ravi.orbit.service.impl;
 
 import com.ravi.orbit.dto.SellerDTO;
-import com.ravi.orbit.dto.AuthPayload;
-import com.ravi.orbit.dto.UserDTO;
+import com.ravi.orbit.dto.AuthDTO;
+import com.ravi.orbit.entity.RefreshToken;
 import com.ravi.orbit.entity.Seller;
-import com.ravi.orbit.entity.User;
 import com.ravi.orbit.enums.EStatus;
 import com.ravi.orbit.exceptions.BadRequestException;
+import com.ravi.orbit.repository.RefreshTokenRepository;
 import com.ravi.orbit.repository.SellerRepository;
 import com.ravi.orbit.service.ISellerService;
 import com.ravi.orbit.utils.JwtUtil;
@@ -16,10 +16,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -27,13 +28,14 @@ import java.util.List;
 public class SellerServiceImpl implements ISellerService {
 
     private final SellerRepository sellerRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
     @Override
-    public AuthPayload sellerSignup(SellerDTO sellerDTO) {
+    public AuthDTO sellerSignup(SellerDTO sellerDTO) {
         Validator.validateSellerSignup(sellerDTO);
-        AuthPayload response = new AuthPayload();
+        AuthDTO response = new AuthDTO();
 
         Seller seller = new Seller();
 
@@ -45,28 +47,46 @@ public class SellerServiceImpl implements ISellerService {
         String accessToken = jwtUtil.generateJwtToken(sellerDTO.getPhone());
         String refreshToken = jwtUtil.generateRefreshToken(sellerDTO.getPhone());
 
+        RefreshToken refreshTokenEntity = new RefreshToken();
+        refreshTokenEntity.setToken(refreshToken);
+        refreshTokenEntity.setUsername(sellerDTO.getUsername());
+        refreshTokenEntity.setExpiryDate(LocalDateTime.now().plusDays(7));
+        refreshTokenRepository.save(refreshTokenEntity);
+
         response.setAccessToken(accessToken);
         response.setRefreshToken(refreshToken);
         return response;
     }
 
     @Override
-    public AuthPayload sellerLogin(SellerDTO sellerDTO) {
-        AuthPayload response = new AuthPayload();
+    public AuthDTO sellerLogin(SellerDTO sellerDTO) {
+
         SellerDTO auth = getSellerAuthByUsername(sellerDTO.getUsername());
 
-        if(passwordEncoder.matches(sellerDTO.getPassword(), auth.getPassword())){
-            String accessToken = jwtUtil.generateJwtToken(sellerDTO.getUsername());
-            String refreshToken = jwtUtil.generateRefreshToken(sellerDTO.getUsername());
-            response.setAccessToken(accessToken);
-            response.setRefreshToken(refreshToken);
+        if (!passwordEncoder.matches(sellerDTO.getPassword(), auth.getPassword())) {
+            throw new BadCredentialsException("Invalid username or password");
         }
+
+        AuthDTO response = new AuthDTO();
+
+        String accessToken = jwtUtil.generateJwtToken(auth.getUsername());
+        String refreshToken = jwtUtil.generateRefreshToken(auth.getUsername());
+
+        RefreshToken refreshTokenEntity = new RefreshToken();
+        refreshTokenEntity.setToken(refreshToken);
+        refreshTokenEntity.setUsername(sellerDTO.getUsername());
+        refreshTokenEntity.setExpiryDate(LocalDateTime.now().plusDays(7));
+        refreshTokenRepository.save(refreshTokenEntity);
+
+        response.setAccessToken(accessToken);
+        response.setRefreshToken(refreshToken);
+        response.setSellerDTO(getSellerDTOByUsername(auth.getUsername()));
 
         log.info("Seller {} successfully logged in", auth.getUsername());
 
-        response.setSellerDTO(getSellerDTOByUsername(auth.getUsername()));
         return response;
     }
+
 
     @Override
     public SellerDTO updateSeller(SellerDTO sellerDTO, String username) {
@@ -155,28 +175,6 @@ public class SellerServiceImpl implements ISellerService {
         seller.setPassword(passwordEncoder.encode(sellerDTO.getPassword()));
 
         return seller;
-    }
-
-    public SellerDTO mapToSellerDTO (SellerDTO sellerDTO, Seller seller) {
-        sellerDTO.setFirstName(seller.getFirstName());
-        sellerDTO.setMiddleName(seller.getMiddleName());
-        sellerDTO.setLastName(seller.getLastName());
-        sellerDTO.setUsername(seller.getPhone());
-        sellerDTO.setPhone(seller.getPhone());
-        sellerDTO.setEmail(seller.getEmail());
-        sellerDTO.setGender(seller.getGender());
-        sellerDTO.setDob(seller.getDob());
-        sellerDTO.setRole(seller.getRole());
-        sellerDTO.setStatus(seller.getStatus());
-        sellerDTO.setImageUrl(seller.getImageUrl());
-        // address
-        sellerDTO.setAddress(seller.getAddress());
-        sellerDTO.setZipcode(seller.getZipcode());
-        sellerDTO.setState(seller.getState());
-        sellerDTO.setCountryCode(seller.getCountryCode());
-        sellerDTO.setPassword(passwordEncoder.encode(seller.getPassword()));
-
-        return sellerDTO;
     }
 
 }
