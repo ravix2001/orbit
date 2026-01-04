@@ -13,9 +13,10 @@ import org.springframework.stereotype.Component;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-@Slf4j
 @Component
 public class JwtUtil {
 
@@ -26,7 +27,7 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secretKey.getBytes());
     }
 
-    private Claims extractAllClaims(String token) {
+    public Claims extractAllClaims(String token) {
         try {
             return Jwts.parser()
                     .verifyWith(getSigningKey())
@@ -34,10 +35,8 @@ public class JwtUtil {
                     .parseSignedClaims(token)
                     .getPayload();
         } catch (ExpiredJwtException ex) {
-            log.error("Token has expired: {}", ex.getMessage());
             throw new ExpiredTokenException("Token has expired");
         } catch (Exception e) {
-            log.error("Invalid JWT token: {}", e.getMessage());
             throw new InvalidTokenException("Invalid JWT token");
         }
     }
@@ -46,44 +45,44 @@ public class JwtUtil {
         return extractAllClaims(token).getSubject();
     }
 
-    public Date extractExpiration(String token) {
-        return extractAllClaims(token).getExpiration();
+    @SuppressWarnings("unchecked")
+    public Set<String> extractRoles(String token) {
+        return Set.copyOf((List<String>) extractAllClaims(token).get("roles"));
     }
 
     public Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
-    public Boolean isRefreshToken(String token) {
-        Claims claims = extractAllClaims(token);
-        return "refresh".equals(claims.get("type"));
+    private Date extractExpiration(String token) {
+        return extractAllClaims(token).getExpiration();
     }
 
-    public String createToken(Map<String, Object> claims, String subject, long expirationMillis) {
+    public boolean isRefreshToken(String token) {
+        return "refresh".equals(extractAllClaims(token).get("type"));
+    }
+
+    public String generateJwtToken(String username, Set<String> roles) {
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("type", "access");
+        claims.put("roles", roles);
+        return createToken(claims, username, MyConstants.JWT_TOKEN_VALIDITY);
+    }
+
+    public String generateRefreshToken(String username) {
+        return createToken(Map.of("type", "refresh"),
+                username, MyConstants.REFRESH_TOKEN_VALIDITY);
+    }
+
+    private String createToken(Map<String, Object> claims, String subject, long expirationMillis) {
         return Jwts.builder()
                 .claims(claims)
                 .subject(subject)
-                .header().empty().add("typ", "JWT")
-                .and()
-                .issuedAt(new Date(System.currentTimeMillis()))
+                .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(getSigningKey())
                 .compact();
     }
 
-    public String generateJwtToken(String username) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("type", "access");
-        return createToken(claims, username, MyConstants.JWT_TOKEN_VALIDITY);
-    }
-
-    public String generateRefreshToken(String username) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("type", "refresh");
-        return createToken(claims, username, MyConstants.REFRESH_TOKEN_VALIDITY);
-    }
-
-    public Boolean validateToken(String token) {
-        return !isTokenExpired(token);
-    }
+    public Boolean validateToken(String token) { return !isTokenExpired(token); }
 }

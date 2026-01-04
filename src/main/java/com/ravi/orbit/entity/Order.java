@@ -49,11 +49,4 @@ public class Order {
     @Column(name = "user_id", insertable = false, updatable = false)
     private Long userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", referencedColumnName = "id")
-    private Seller seller;
-
-    @Column(name = "seller_id", insertable = false, updatable = false)
-    private Long sellerId;
-
 }

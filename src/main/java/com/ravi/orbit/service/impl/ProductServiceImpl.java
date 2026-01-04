@@ -4,8 +4,8 @@ import com.ravi.orbit.dto.*;
 import com.ravi.orbit.entity.Category;
 import com.ravi.orbit.entity.Color;
 import com.ravi.orbit.entity.Product;
-import com.ravi.orbit.entity.Seller;
 import com.ravi.orbit.entity.Size;
+import com.ravi.orbit.entity.User;
 import com.ravi.orbit.enums.EStatus;
 import com.ravi.orbit.exceptions.BadRequestException;
 import com.ravi.orbit.repository.ColorRepository;
@@ -13,7 +13,7 @@ import com.ravi.orbit.repository.ProductRepository;
 import com.ravi.orbit.repository.SizeRepository;
 import com.ravi.orbit.service.ICategoryService;
 import com.ravi.orbit.service.IProductService;
-import com.ravi.orbit.service.ISellerService;
+import com.ravi.orbit.service.IUserService;
 import com.ravi.orbit.utils.CommonMethods;
 import com.ravi.orbit.utils.MyConstants;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ import java.util.List;
 public class ProductServiceImpl implements IProductService {
 
     private final ICategoryService categoryService;
-    private final ISellerService sellerService;
+    private final IUserService userService;
 
     private final ProductRepository productRepository;
     private final SizeRepository sizeRepository;
@@ -40,14 +40,14 @@ public class ProductServiceImpl implements IProductService {
 //        Validator.validateUserSignup(categoryDTO);
 
         Category category = categoryService.getCategoryById(productDTO.getCategoryId());
-        Seller seller = sellerService.getSellerById(productDTO.getSellerId());
+        User user = userService.getUserById(productDTO.getSellerId());
 
         Product product = null;
 
         if(CommonMethods.isEmpty(productDTO.getId())){
             product = new Product();
             product.setCategory(category);
-            product.setSeller(seller);
+            product.setUser(user);
         }
         else{
             product = getProductById(productDTO.getId());
@@ -61,7 +61,7 @@ public class ProductServiceImpl implements IProductService {
         productDTO.setSizes(sizes);
         productDTO.setColors(colors);
         productDTO.setCategoryId(category.getId());
-        productDTO.setSellerId(seller.getId());
+        productDTO.setSellerId(user.getId());
         return productDTO;
     }
 

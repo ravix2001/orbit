@@ -32,10 +32,10 @@ public class SellerReport {
     private double netRevenue = 0;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", referencedColumnName = "id")
-    private Seller seller;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    @Column(name = "seller_id", insertable = false, updatable = false)
-    private Long sellerId;
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Long userId;
 
 }

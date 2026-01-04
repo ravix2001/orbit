@@ -1,15 +1,16 @@
 package com.ravi.orbit.controller;
 
-import com.ravi.orbit.dto.SellerDTO;
 import com.ravi.orbit.dto.AuthDTO;
 import com.ravi.orbit.dto.UserDTO;
+import com.ravi.orbit.enums.ERole;
 import com.ravi.orbit.service.IAuthService;
-import com.ravi.orbit.service.ISellerService;
-import com.ravi.orbit.service.IUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
+import java.util.Set;
 
 @Slf4j
 @RestController
@@ -17,37 +18,66 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private final IUserService userService;
-    private final ISellerService sellerService;
     private final IAuthService authService;
 
-    @PostMapping("/userSignup")
+    /* ===================== SIGNUP ===================== */
+
+    @PostMapping("/signup/user")
     public ResponseEntity<AuthDTO> userSignup(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.userSignup(userDTO));
+        return ResponseEntity.ok(authService.userSignup(userDTO));
     }
 
-    @PostMapping("/sellerSignup")
-    public ResponseEntity<AuthDTO> sellerSignup(@RequestBody SellerDTO sellerDTO) {
-        return ResponseEntity.ok(sellerService.sellerSignup(sellerDTO));
+    @PostMapping("/signup/seller")
+    public ResponseEntity<AuthDTO> sellerSignup(@RequestBody UserDTO userDTO) {
+        return ResponseEntity.ok(authService.sellerSignup(userDTO));
     }
 
-    @PostMapping("/userLogin")
-    public ResponseEntity<AuthDTO> userLogin(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.userLogin(userDTO));
+    /* ===================== LOGIN ===================== */
+
+    @PostMapping("/login/user")
+    public ResponseEntity<AuthDTO> userLogin(@RequestBody AuthDTO request) {
+        return ResponseEntity.ok(
+                authService.login(
+                        request.getUsername(),
+                        request.getPassword(),
+                        Set.of(ERole.ROLE_USER)
+                )
+        );
     }
 
-    @PostMapping("/sellerLogin")
-    public ResponseEntity<AuthDTO> sellerLogin(@RequestBody SellerDTO sellerDTO) {
-        return ResponseEntity.ok(sellerService.sellerLogin(sellerDTO));
+    @PostMapping("/login/seller")
+    public ResponseEntity<AuthDTO> sellerLogin(@RequestBody AuthDTO request) {
+        return ResponseEntity.ok(
+                authService.login(
+                        request.getUsername(),
+                        request.getPassword(),
+                        Set.of(ERole.ROLE_SELLER)
+                )
+        );
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<?> refresh(@RequestHeader("Authorization") String authHeader) {
+    @PostMapping("/login/admin")
+    public ResponseEntity<AuthDTO> adminLogin(@RequestBody AuthDTO request) {
+        return ResponseEntity.ok(
+                authService.login(
+                        request.getUsername(),
+                        request.getPassword(),
+                        Set.of(ERole.ROLE_ADMIN)
+                )
+        );
+    }
+
+    /* ===================== TOKEN ===================== */
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<Map<String, String>> refreshToken(
+            @RequestHeader("Authorization") String authHeader) {
         return ResponseEntity.ok(authService.refreshToken(authHeader));
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<Map<String, String>> logout(
+            @RequestHeader("Authorization") String authHeader) {
         return ResponseEntity.ok(authService.logout(authHeader));
     }
 

@@ -23,10 +23,10 @@ public class UserController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDto) {
+    public ResponseEntity<UserDTO> updateProfile(@RequestBody UserDTO userDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        return ResponseEntity.ok(userService.updateUser(userDto, username));
+        return ResponseEntity.ok(userService.updateProfile(userDto, username));
     }
 
     @DeleteMapping("/delete")

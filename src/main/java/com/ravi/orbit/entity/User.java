@@ -5,18 +5,26 @@ import com.ravi.orbit.enums.ERole;
 import com.ravi.orbit.enums.EStatus;
 import com.ravi.orbit.enums.EGender;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -58,10 +66,6 @@ public class User {
     @Column(name = "dob")
     private LocalDate dob;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private ERole role = ERole.ROLE_USER;
-
     // status
     @Enumerated(EnumType.STRING)
     @Column(name = "user_status")
@@ -82,5 +86,17 @@ public class User {
 
     @Column(name = "countryCode")
     private String countryCode;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<UserRoles> userRoles;
+
 
 }

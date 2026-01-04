@@ -31,11 +31,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/cart/**", "/api/user/**", "/api/email-verification/**").authenticated()
                         .requestMatchers("/api/admin/**", "/api/category/**").hasRole("ADMIN")
                         .requestMatchers("/api/seller/**", "/api/product/**").hasRole("SELLER")
+                        .requestMatchers("/api/user/**").hasRole("USER")
+                        .requestMatchers("/api/cart/**", "/api/user/**", "/api/email-verification/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
@@ -44,8 +47,6 @@ public class SecurityConfig {
                 .oauth2Login(Customizer.withDefaults())
 //                        .defaultSuccessUrl("/api/user/profile", true)
 //                        .failureUrl("/login?error=true"));
-//                // for httpBasicAuthentication
-//                .httpBasic(Customizer.withDefaults());
                 // for jwtAuthentication
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

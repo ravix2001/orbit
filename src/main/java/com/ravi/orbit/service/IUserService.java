@@ -3,20 +3,17 @@ package com.ravi.orbit.service;
 import com.ravi.orbit.dto.AuthDTO;
 import com.ravi.orbit.dto.UserDTO;
 import com.ravi.orbit.entity.User;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.ravi.orbit.enums.ERole;
+
+import java.util.Set;
 
 public interface IUserService {
 
     UserDTO handleUser(UserDTO userDTO);
 
-    AuthDTO userSignup(UserDTO userDTO);
+    AuthDTO signup(UserDTO userDTO, Set<ERole> roles);
 
-    AuthDTO userLogin(UserDTO userDTO);
-
-    UserDTO updateUser(UserDTO userDTO, String username);
-
-    Page<UserDTO> getAllUsers(Pageable pageable);
+    UserDTO updateProfile(UserDTO userDTO, String username);
 
     UserDTO getUserDTOById(Long id);
 

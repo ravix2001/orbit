@@ -1,9 +1,8 @@
 package com.ravi.orbit.controller;
 
-import com.ravi.orbit.dto.SellerDTO;
-import com.ravi.orbit.service.ISellerService;
+import com.ravi.orbit.dto.UserDTO;
+import com.ravi.orbit.service.IUserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,27 +13,27 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class SellerController {
 
-    private final ISellerService sellerService;
+    private final IUserService userService;
 
     @GetMapping("/profile")
-    public ResponseEntity<SellerDTO> getSellerProfile() {
+    public ResponseEntity<UserDTO> getUserProfile() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        return ResponseEntity.ok(sellerService.getSellerDTOByUsername(username));
+        return ResponseEntity.ok(userService.getUserDTOByUsername(username));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<SellerDTO> updateSeller(@RequestBody SellerDTO sellerDTO) {
+    public ResponseEntity<UserDTO> updateProfile(@RequestBody UserDTO userDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        return ResponseEntity.ok(sellerService.updateSeller(sellerDTO, username));
+        return ResponseEntity.ok(userService.updateProfile(userDto, username));
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteSeller() {
+    public ResponseEntity<Void> deleteUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        sellerService.deleteSeller(username);
+        userService.deleteUser(username);
         return ResponseEntity.ok().build();
     }
 
