@@ -72,6 +72,19 @@ public class AdminController {
 //        return ResponseEntity.ok(userService.getSellerDTOById(id));
 //    }
 
+    // Get all sellers
+    @GetMapping("/allAdmins")
+    public ResponseEntity<Page<UserDTO>> getAllAdmins(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(adminService.getAllAdmins(pageable));
+    }
+
     @DeleteMapping("/deleteUserHard/{id}")
     public ResponseEntity<Void> deleteUserHard(@PathVariable Long id) {
         userService.deleteUserHard(id);

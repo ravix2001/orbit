@@ -96,8 +96,12 @@ public class AdminServiceImpl implements IAdminService {
 
     @Override
     public Page<UserDTO> getAllSellers(Pageable pageable) {
-        return userRepository.getUsersByRolesAndStatus(Set.of(ERole.ROLE_USER), EStatus.ACTIVE, pageable);
+        return userRepository.getUsersByRolesAndStatus(Set.of(ERole.ROLE_SELLER), EStatus.ACTIVE, pageable);
     }
 
+    @Override
+    public Page<UserDTO> getAllAdmins(Pageable pageable) {
+        return userRepository.getUsersByRolesAndStatus(Set.of(ERole.ROLE_ADMIN), EStatus.ACTIVE, pageable);
+    }
 
 }

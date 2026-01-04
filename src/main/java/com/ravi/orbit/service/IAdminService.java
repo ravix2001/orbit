@@ -14,4 +14,6 @@ public interface IAdminService {
 
     Page<UserDTO> getAllSellers(Pageable pageable);
 
+    Page<UserDTO> getAllAdmins(Pageable pageable);
+
 }
