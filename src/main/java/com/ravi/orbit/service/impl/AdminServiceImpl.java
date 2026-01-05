@@ -35,11 +35,13 @@ public class AdminServiceImpl implements IAdminService {
 
         // Fetch the user's current role
         UserRoles currentRole = userRolesRepository.findByUser(user)
-                .orElseThrow(() -> new BadRequestException("User has no role assigned"));
+                .orElseThrow(() -> new BadRequestException(MyConstants
+                        .ERR_MSG_NOT_FOUND + "User has no role assigned"));
 
         // Check if the user is already admin
         if (currentRole.getRole().getRole() == ERole.ROLE_ADMIN) {
-            throw new BadRequestException(MyConstants.ERR_MSG_ALREADY_EXIST + " User as admin");
+            throw new BadRequestException(MyConstants
+                    .ERR_MSG_ALREADY_EXIST + " User as admin");
         }
 
         // If the user has USER role, delete it
@@ -49,7 +51,8 @@ public class AdminServiceImpl implements IAdminService {
 
         // Assign ADMIN role
         Role adminRole = roleRepository.findByRole(ERole.ROLE_ADMIN)
-                .orElseThrow(() -> new BadRequestException(MyConstants.ERR_MSG_NOT_FOUND + " " + ERole.ROLE_ADMIN));
+                .orElseThrow(() -> new BadRequestException(MyConstants
+                        .ERR_MSG_NOT_FOUND + " " + ERole.ROLE_ADMIN));
 
         UserRoles adminUserRoles = new UserRoles();
         adminUserRoles.setUser(user);
@@ -68,11 +71,13 @@ public class AdminServiceImpl implements IAdminService {
 
         // Fetch the user's current role
         UserRoles currentRole = userRolesRepository.findByUser(user)
-                .orElseThrow(() -> new BadRequestException("User has no role assigned"));
+                .orElseThrow(() -> new BadRequestException(MyConstants
+                        .ERR_MSG_NOT_FOUND + "User has no role assigned"));
 
         // If the user is already a regular user, throw error
         if (currentRole.getRole().getRole() == ERole.ROLE_USER) {
-            throw new BadRequestException(MyConstants.ERR_MSG_ALREADY_EXIST + " User is already a regular user");
+            throw new BadRequestException(MyConstants
+                    .ERR_MSG_ALREADY_EXIST + " User is already a regular user");
         }
 
         // If the user has ADMIN role, remove it
@@ -82,7 +87,8 @@ public class AdminServiceImpl implements IAdminService {
 
         // Assign USER role
         Role userRole = roleRepository.findByRole(ERole.ROLE_USER)
-                .orElseThrow(() -> new BadRequestException(MyConstants.ERR_MSG_NOT_FOUND + " " + ERole.ROLE_USER));
+                .orElseThrow(() -> new BadRequestException(MyConstants
+                        .ERR_MSG_NOT_FOUND + " " + ERole.ROLE_USER));
 
         UserRoles newUserRole = new UserRoles();
         newUserRole.setUser(user);
@@ -94,6 +100,10 @@ public class AdminServiceImpl implements IAdminService {
         return user.getUsername() + " is no longer an admin";
     }
 
+    @Override
+    public Page<UserDTO> getUsersByRoleAndStatus(ERole role, EStatus status, Pageable pageable) {
+        return userRepository.getUsersByRoleAndStatus(role, status, pageable);
+    }
 
     // for multiple roles
 //    @Override
@@ -129,19 +139,14 @@ public class AdminServiceImpl implements IAdminService {
 //        return user.getUsername() + " is no longer an admin";
 //    }
 
-    @Override
-    public Page<UserDTO> getAllUsers(Pageable pageable) {
-        return userRepository.getUsersByRoleAndStatus(ERole.ROLE_USER, EStatus.ACTIVE, pageable);
-    }
-
-    @Override
-    public Page<UserDTO> getAllSellers(Pageable pageable) {
-        return userRepository.getUsersByRoleAndStatus(ERole.ROLE_SELLER, EStatus.ACTIVE, pageable);
-    }
-
-    @Override
-    public Page<UserDTO> getAllAdmins(Pageable pageable) {
-        return userRepository.getUsersByRoleAndStatus(ERole.ROLE_ADMIN, EStatus.ACTIVE, pageable);
-    }
+//    @Override
+//    public Page<UserDTO> getAllSellers(Pageable pageable) {
+//        return userRepository.getUsersByRoleAndStatus(ERole.ROLE_SELLER, EStatus.ACTIVE, pageable);
+//    }
+//
+//    @Override
+//    public Page<UserDTO> getAllAdmins(Pageable pageable) {
+//        return userRepository.getUsersByRoleAndStatus(ERole.ROLE_ADMIN, EStatus.ACTIVE, pageable);
+//    }
 
 }
