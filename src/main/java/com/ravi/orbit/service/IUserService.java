@@ -11,7 +11,9 @@ public interface IUserService {
 
     UserDTO handleUser(UserDTO userDTO);
 
-    AuthDTO signup(UserDTO userDTO, Set<ERole> roles);
+    AuthDTO signup(UserDTO userDTO, ERole role);
+
+    AuthDTO login(String username, String password, ERole role);
 
     UserDTO updateProfile(UserDTO userDTO, String username);
 

@@ -13,7 +13,11 @@ public interface IAuthService {
 
     AuthDTO sellerSignup(UserDTO userDTO);
 
-    AuthDTO login(String username, String password, Set<ERole> requiredRoles);
+    AuthDTO userLogin(AuthDTO authDTO);
+
+    AuthDTO sellerLogin(AuthDTO authDTO);
+
+    AuthDTO adminLogin(AuthDTO authDTO);
 
     Map<String, String> refreshToken(String authHeader);
 

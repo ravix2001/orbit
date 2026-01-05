@@ -12,6 +12,13 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, " +
+            "p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +
+            "p.categoryId, p.userId, p.imageUrl ) " +
+            " FROM Product p" +
+            " WHERE p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
+    Page<ProductDTO> getAllProducts(Pageable pageable);
+
     @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.code, p.name, p.brand, p.status, p.features, " +
             "p.description, p.quantity, p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +
             "p.categoryId, p.userId, p.imageUrl ) " +
@@ -25,13 +32,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             " FROM Product p" +
             " WHERE p.code = :code")
     Optional<ProductDTO> getProductDTOByCode(String code);
-
-    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, " +
-            "p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +
-            "p.categoryId, p.userId, p.imageUrl ) " +
-            " FROM Product p" +
-            " WHERE p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
-    Page<ProductDTO> getAllProducts(Pageable pageable);
 
     @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, " +
             "p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +

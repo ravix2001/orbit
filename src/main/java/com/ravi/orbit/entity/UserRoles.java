@@ -7,21 +7,25 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-@Table(
-        name = "user_roles",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"})
-)
+@Table(name = "user_roles")
 public class UserRoles {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "role_id")
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Long userId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", referencedColumnName = "id")
     private Role role;
+
+    @Column(name = "role_id", insertable = false, updatable = false)
+    private Long roleId;
+
 }

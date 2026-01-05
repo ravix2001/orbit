@@ -1,12 +1,12 @@
 package com.ravi.orbit.utils;
 
+import com.ravi.orbit.enums.ERole;
 import com.ravi.orbit.exceptions.ExpiredTokenException;
 import com.ravi.orbit.exceptions.InvalidTokenException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -45,9 +45,8 @@ public class JwtUtil {
         return extractAllClaims(token).getSubject();
     }
 
-    @SuppressWarnings("unchecked")
-    public Set<String> extractRoles(String token) {
-        return Set.copyOf((List<String>) extractAllClaims(token).get("roles"));
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("role").toString();
     }
 
     public Boolean isTokenExpired(String token) {
@@ -62,10 +61,10 @@ public class JwtUtil {
         return "refresh".equals(extractAllClaims(token).get("type"));
     }
 
-    public String generateJwtToken(String username, Set<String> roles) {
+    public String generateJwtToken(String username, ERole role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("type", "access");
-        claims.put("roles", roles);
+        claims.put("role", role);
         return createToken(claims, username, MyConstants.JWT_TOKEN_VALIDITY);
     }
 

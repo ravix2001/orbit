@@ -36,35 +36,17 @@ public class AuthController {
 
     @PostMapping("/login/user")
     public ResponseEntity<AuthDTO> userLogin(@RequestBody AuthDTO request) {
-        return ResponseEntity.ok(
-                authService.login(
-                        request.getUsername(),
-                        request.getPassword(),
-                        Set.of(ERole.ROLE_USER)
-                )
-        );
+        return ResponseEntity.ok(authService.userLogin(request));
     }
 
     @PostMapping("/login/seller")
     public ResponseEntity<AuthDTO> sellerLogin(@RequestBody AuthDTO request) {
-        return ResponseEntity.ok(
-                authService.login(
-                        request.getUsername(),
-                        request.getPassword(),
-                        Set.of(ERole.ROLE_SELLER)
-                )
-        );
+        return ResponseEntity.ok(authService.sellerLogin(request));
     }
 
     @PostMapping("/login/admin")
     public ResponseEntity<AuthDTO> adminLogin(@RequestBody AuthDTO request) {
-        return ResponseEntity.ok(
-                authService.login(
-                        request.getUsername(),
-                        request.getPassword(),
-                        Set.of(ERole.ROLE_ADMIN)
-                )
-        );
+        return ResponseEntity.ok(authService.adminLogin(request));
     }
 
     /* ===================== TOKEN ===================== */

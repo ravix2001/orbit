@@ -15,13 +15,12 @@ import java.util.Set;
 public interface UserRepository extends JpaRepository <User, Long> {
 
     @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, " +
-            "u.phone, u.email, u.username, u.imageUrl) " +
-            "FROM User u " +
-            "JOIN u.userRoles ur " +
-            "JOIN ur.role r " +
-            "WHERE r.role IN :roles " +
-            "AND u.status = :status ")
-    Page<UserDTO> getUsersByRolesAndStatus(Set<ERole> roles, EStatus status, Pageable pageable);
+            " u.phone, u.email, u.username, u.imageUrl) " +
+            " FROM UserRoles ur " +
+            " JOIN ur.user u " +
+            " JOIN ur.role r " +
+            " WHERE r.role = :role AND u.status = :status ")
+    Page<UserDTO> getUsersByRoleAndStatus(ERole role, EStatus status, Pageable pageable);
 
     @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, " +
             " u.phone, u.email, u.username, u.gender, u.dob, u.status, u.imageUrl, " +

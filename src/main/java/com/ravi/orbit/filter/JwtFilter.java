@@ -1,5 +1,7 @@
 package com.ravi.orbit.filter;
 
+import com.ravi.orbit.exceptions.ExpiredTokenException;
+import com.ravi.orbit.exceptions.InvalidTokenException;
 import com.ravi.orbit.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -15,8 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -33,7 +33,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
         final String authHeader = request.getHeader("Authorization");
 
-        // No token → continue
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
@@ -41,36 +40,49 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
 
-        // Validate token
-        if (!jwtUtil.validateToken(token)) {
+        try {
+            // Validate token (throws if expired/invalid)
+            jwtUtil.validateToken(token);
+
+            String username = jwtUtil.extractUsername(token);
+            String role = jwtUtil.extractRole(token);
+
+            SimpleGrantedAuthority authority =
+                    new SimpleGrantedAuthority(role);
+
+            UsernamePasswordAuthenticationToken authentication =
+                    new UsernamePasswordAuthenticationToken(
+                            username,
+                            null,
+                            List.of(authority)
+                    );
+
+            authentication.setDetails(
+                    new WebAuthenticationDetailsSource().buildDetails(request)
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
-            return;
+
+        } catch (ExpiredTokenException ex) {
+            sendUnauthorized(response, "Token has expired");
+        } catch (InvalidTokenException ex) {
+            sendUnauthorized(response, "Invalid token");
         }
-
-        // Extract data
-        String username = jwtUtil.extractUsername(token);
-        Set<String> roles = jwtUtil.extractRoles(token);
-
-        // MAP ROLES HERE
-        List<SimpleGrantedAuthority> authorities = roles.stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        UsernamePasswordAuthenticationToken authentication =
-                new UsernamePasswordAuthenticationToken(
-                        username,
-                        null,
-                        authorities
-                );
-
-        authentication.setDetails(
-                new WebAuthenticationDetailsSource().buildDetails(request)
-        );
-
-        // Set into Spring Security context
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        filterChain.doFilter(request, response);
     }
 
+    private void sendUnauthorized(HttpServletResponse response, String message)
+            throws IOException {
+
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+
+        response.getWriter().write("""
+            {
+              "status": 401,
+              "error": "Unauthorized",
+              "message": "%s"
+            }
+            """.formatted(message));
+    }
 }

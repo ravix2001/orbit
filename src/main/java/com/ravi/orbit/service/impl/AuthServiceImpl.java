@@ -9,6 +9,7 @@ import com.ravi.orbit.enums.ERole;
 import com.ravi.orbit.exceptions.BadRequestException;
 import com.ravi.orbit.exceptions.InvalidTokenException;
 import com.ravi.orbit.repository.RefreshTokenRepository;
+import com.ravi.orbit.repository.RoleRepository;
 import com.ravi.orbit.service.IAuthService;
 import com.ravi.orbit.service.IUserService;
 import com.ravi.orbit.utils.JwtUtil;
@@ -21,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Map;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,55 +30,33 @@ import java.util.stream.Collectors;
 public class AuthServiceImpl implements IAuthService {
 
     private final IUserService userService;
+    private final RoleRepository roleRepository;
     private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
-    private final PasswordEncoder passwordEncoder;
 
     @Override
     public AuthDTO userSignup(UserDTO userDTO) {
-        return userService.signup(userDTO, Set.of(ERole.ROLE_USER));
+        return userService.signup(userDTO, ERole.ROLE_USER);
     }
 
     @Override
     public AuthDTO sellerSignup(UserDTO userDTO) {
-        return userService.signup(userDTO, Set.of(ERole.ROLE_SELLER));
+        return userService.signup(userDTO, ERole.ROLE_SELLER);
     }
 
     @Override
-    public AuthDTO login(String username, String password, Set<ERole> requiredRoles) {
-        User user = userService.getUserByUsername(username);
+    public AuthDTO userLogin(AuthDTO authDTO) {
+        return userService.login(authDTO.getUsername(), authDTO.getPassword(), ERole.ROLE_USER);
+    }
 
-        if (!passwordEncoder.matches(password, user.getPassword())) {
-            throw new BadRequestException("Invalid credentials");
-        }
+    @Override
+    public AuthDTO sellerLogin(AuthDTO authDTO) {
+        return userService.login(authDTO.getUsername(), authDTO.getPassword(), ERole.ROLE_SELLER);
+    }
 
-        // Verify user has at least one required role
-        Set<ERole> userRoles = user.getRoles().stream()
-                .map(Role::getRole)
-                .collect(Collectors.toSet());
-        if (userRoles.stream().noneMatch(requiredRoles::contains)) {
-            throw new BadRequestException("User does not have required role");
-        }
-
-        // Generate JWTs with all roles
-        Set<String> roleNames = userRoles.stream().map(Enum::name).collect(Collectors.toSet());
-        String accessToken = jwtUtil.generateJwtToken(username, roleNames);
-        String refreshToken = jwtUtil.generateRefreshToken(username);
-
-        // Save refresh token
-        RefreshToken refreshTokenEntity = new RefreshToken();
-        refreshTokenEntity.setToken(refreshToken);
-        refreshTokenEntity.setUsername(username);
-        refreshTokenEntity.setExpiryDate(LocalDateTime.now().plusDays(7));
-        refreshTokenRepository.save(refreshTokenEntity);
-
-        // Build response
-        AuthDTO response = new AuthDTO();
-        response.setUserDTO(userService.getUserDTOByUsername(username));
-        response.setAccessToken(accessToken);
-        response.setRefreshToken(refreshToken);
-
-        return response;
+    @Override
+    public AuthDTO adminLogin(AuthDTO authDTO) {
+        return userService.login(authDTO.getUsername(), authDTO.getPassword(), ERole.ROLE_ADMIN);
     }
 
     @Override
@@ -108,14 +85,13 @@ public class AuthServiceImpl implements IAuthService {
         // Load user + roles
         User user = userService.getUserByUsername(refreshToken.getUsername());
 
-        Set<String> roleNames = user.getRoles()
-                .stream()
-                .map(r -> r.getRole().name())
-                .collect(Collectors.toSet());
+        Role role = roleRepository.findRoleByUsername(refreshToken.getUsername())
+                .orElseThrow(() -> new BadRequestException(MyConstants.ERR_MSG_NOT_FOUND + "Role of user with username: " + refreshToken.getUsername()));
+
 
         // Generate new access token WITH ROLES
         String newAccessToken =
-                jwtUtil.generateJwtToken(user.getUsername(), roleNames);
+                jwtUtil.generateJwtToken(user.getUsername(), role.getRole());
 
         return Map.of("accessToken", newAccessToken);
     }

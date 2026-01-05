@@ -1,36 +1,27 @@
 package com.ravi.orbit.service;
 
-import com.ravi.orbit.dto.ColorDTO;
 import com.ravi.orbit.dto.ProductDTO;
-import com.ravi.orbit.dto.SizeDTO;
-import com.ravi.orbit.entity.Product;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 public interface IProductService {
 
     ProductDTO handleProduct(ProductDTO productDTO);
 
-//    Page<ProductDTO> getAllProducts(Pageable pageable);
-//
-//    ProductDTO getProduct(Long id);
+    Page<ProductDTO> getAllProducts(Pageable pageable);
 
-    ProductDTO getProductDTOById(Long id);
+    ProductDTO getProduct(Long id);
 
-//    ProductDTO getProductDTOByProductId(String productId);
-//
-//    List<ProductDTO> getProductDTOsByName(String name);
+    ProductDTO getProductByCode(String code);
+
+    Page<ProductDTO> getProductDTOsByName(Pageable pageable, String name);
+
+    Page<ProductDTO> getProductDTOsByCategoryId(Pageable pageable, Long categoryId);
+
+    Page<ProductDTO> getProductDTOsBySellerId(Pageable pageable, Long sellerId);
 
     void deleteProduct(Long id);
 
     void deleteProductHard(Long id);
-
-    Product getProductById(Long id);
-
-    List<SizeDTO> getSizeDTOsByProductId(Long productId);
-
-    List<ColorDTO> getColorDTOsByProductId(Long productId);
 
 }

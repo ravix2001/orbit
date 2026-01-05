@@ -19,10 +19,10 @@ public class AdminController {
     private final IAdminService adminService;
     private final IUserService userService;
 
-    @PostMapping("/handleUser")
-    public ResponseEntity<UserDTO> handleUser(@RequestBody UserDTO userDTO) {
-        return ResponseEntity.ok(userService.handleUser(userDTO));
-    }
+//    @PostMapping("/handleUser")
+//    public ResponseEntity<UserDTO> handleUser(@RequestBody UserDTO userDTO) {
+//        return ResponseEntity.ok(userService.handleUser(userDTO));
+//    }
 
     @GetMapping("/createAdmin/{id}")
     public ResponseEntity<String> createAdmin(@PathVariable Long id) {
