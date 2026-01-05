@@ -1,5 +1,6 @@
 package com.ravi.orbit.entity;
 
+import com.ravi.orbit.enums.ERole;
 import com.ravi.orbit.enums.EStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,8 +24,9 @@ public class Role {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "title")
-    private String title;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", unique = true, nullable = false)
+    private ERole role;
 
     @Column(name = "color_code")
     private String colorCode;

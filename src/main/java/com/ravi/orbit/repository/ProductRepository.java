@@ -12,46 +12,46 @@ import java.util.Optional;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
 
+    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, " +
+            "p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +
+            "p.categoryId, p.userId, p.imageUrl ) " +
+            " FROM Product p" +
+            " WHERE p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
+    Page<ProductDTO> getAllProducts(Pageable pageable);
+
     @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.code, p.name, p.brand, p.status, p.features, " +
             "p.description, p.quantity, p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +
-            "p.categoryId, p.sellerId, p.imageUrl ) " +
+            "p.categoryId, p.userId, p.imageUrl ) " +
             " FROM Product p" +
             " WHERE p.id = :id")
     Optional<ProductDTO> getProductDTOById(Long id);
 
     @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.code, p.name, p.brand, p.status, p.features, " +
             "p.description, p.quantity, p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +
-            "p.categoryId, p.sellerId, p.imageUrl ) " +
+            "p.categoryId, p.userId, p.imageUrl ) " +
             " FROM Product p" +
             " WHERE p.code = :code")
     Optional<ProductDTO> getProductDTOByCode(String code);
 
     @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, " +
             "p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +
-            "p.categoryId, p.sellerId, p.imageUrl ) " +
-            " FROM Product p" +
-            " WHERE p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
-    Page<ProductDTO> getAllProducts(Pageable pageable);
-
-    @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, " +
-            "p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +
-            "p.categoryId, p.sellerId, p.imageUrl ) " +
+            "p.categoryId, p.userId, p.imageUrl ) " +
             " FROM Product p" +
             " WHERE p.name = :name AND p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
     Page<ProductDTO> getProductDTOsByName(Pageable pageable, String name);
 
     @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, " +
             "p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +
-            "p.categoryId, p.sellerId, p.imageUrl ) " +
+            "p.categoryId, p.userId, p.imageUrl ) " +
             " FROM Product p" +
             " WHERE p.categoryId = :categoryId AND p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
     Page<ProductDTO> getProductDTOsByCategoryId(Pageable pageable, Long categoryId);
 
     @Query("SELECT NEW com.ravi.orbit.dto.ProductDTO(p.id, p.name, p.brand, p.description, " +
             "p.marketPrice, p.discountPercent, p.discountAmount, p.sellingPrice," +
-            "p.categoryId, p.sellerId, p.imageUrl ) " +
+            "p.categoryId, p.userId, p.imageUrl ) " +
             " FROM Product p" +
-            " WHERE p.sellerId = :sellerId AND p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
+            " WHERE p.userId = :sellerId AND p.status = com.ravi.orbit.enums.EStatus.ACTIVE ")
     Page<ProductDTO> getProductDTOsBySellerId(Pageable pageable, Long sellerId);
 
 }

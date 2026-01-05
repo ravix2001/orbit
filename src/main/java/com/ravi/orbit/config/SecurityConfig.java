@@ -31,25 +31,44 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/cart/**", "/api/user/**", "/api/email-verification/**").authenticated()
-                        .requestMatchers("/api/admin/**", "/api/category/**").hasRole("ADMIN")
-                        .requestMatchers("/api/seller/**", "/api/product/**").hasRole("SELLER")
+
+                        // ===== ADMIN ONLY =====
+                        .requestMatchers(
+                                "/api/admin/**",
+                                "/api/categories/handleCategory",
+                                "/api/categories/deleteCategory/**",
+                                "/api/categories/deleteCategoryHard/**"
+                        ).hasRole("ADMIN")
+
+                        // ===== SELLER ONLY =====
+                        .requestMatchers(
+                                "/api/seller/**",
+                                "/api/products/handleProduct",
+                                "/api/products/deleteProduct/**",
+                                "/api/products/deleteProductHard/**"
+                        ).hasRole("SELLER")
+
+                        // ===== AUTHENTICATED USERS =====
+                        .requestMatchers(
+                                "/api/cart/**",
+                                "/api/user/**",
+                                "/api/email-verification/**"
+                        ).authenticated()
+
+//                        // ===== ALL API NEED TOKEN =====
+//                        .requestMatchers("/api/**").authenticated()
+
+                        // ===== PUBLIC =====
                         .anyRequest().permitAll()
                 )
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(csrf -> csrf.disable())  // For testing purposes. In production, you might want to enable it
-                // for google OAuth2
-                .oauth2Login(Customizer.withDefaults())
-//                        .defaultSuccessUrl("/api/user/profile", true)
-//                        .failureUrl("/login?error=true"));
-//                // for httpBasicAuthentication
-//                .httpBasic(Customizer.withDefaults());
-                // for jwtAuthentication
+                .csrf(csrf -> csrf.disable())
+//                .oauth2Login(Customizer.withDefaults())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-
-
 
         return http.build();
     }
@@ -80,16 +99,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
-
-
-//    @Bean
-//    public CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration corsConfiguration = new CorsConfiguration();
-//        corsConfiguration.setAllowedOrigins(Arrays.asList(allowedOrigins));
-//        corsConfiguration.setAllowedMethods(Arrays.asList(allowedMethods));
-//        corsConfiguration.setAllowedHeaders(List.of("*"));
-//        corsConfiguration.setAllowCredentials(true);
-//        return request -> corsConfiguration;
-//    }
 
 }

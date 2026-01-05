@@ -37,13 +37,6 @@ public class Transaction {
     private Long userId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id", referencedColumnName = "id")
-    private Seller seller;
-
-    @Column(name = "seller_id", insertable = false, updatable = false)
-    private Long sellerId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", referencedColumnName = "id")
     private Order order;
 

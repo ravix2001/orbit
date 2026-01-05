@@ -9,9 +9,13 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class AuthDTO {
 
-    private UserDTO userDTO;
+    // for login request
+    private String username;
 
-    private SellerDTO sellerDTO;
+    private String password;
+
+    // for login and signup response
+    private UserDTO userDTO;
 
     private String accessToken;
 

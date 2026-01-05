@@ -10,10 +10,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductController {
 
@@ -24,32 +22,66 @@ public class ProductController {
         return ResponseEntity.ok(productService.handleProduct(productDTO));
     }
 
-//    @GetMapping("/paginated")
-//    public ResponseEntity<Page<ProductDTO>> getAllProducts(
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "5") int size,
-//            @RequestParam(defaultValue = "id") String sortBy,
-//            @RequestParam(defaultValue = "true") boolean ascending) {
-//
-//        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-//        Pageable pageable = PageRequest.of(page, size, sort);
-//        return ResponseEntity.ok(productService.getAllProducts(pageable));
-//    }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
-//        return ResponseEntity.ok(productService.getProduct(id));
-//    }
+    @GetMapping("/all")
+    public ResponseEntity<Page<ProductDTO>> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
 
-//    @GetMapping()
-//    public ResponseEntity<ProductDTO> getProductByProductId(@RequestParam String productId) {
-//        return ResponseEntity.ok(productService.getProductDTOByProductId(productId));
-//    }
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(productService.getAllProducts(pageable));
+    }
 
-//    @GetMapping()
-//    public ResponseEntity<List<ProductDTO>> getProductByName(@RequestParam String name) {
-//        return ResponseEntity.ok(productService.getProductDTOsByName(name));
-//    }
+    @GetMapping("/product/{id}")
+    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.getProduct(id));
+    }
+
+    @GetMapping("/product")
+    public ResponseEntity<ProductDTO> getProductById(@RequestParam String code) {
+        return ResponseEntity.ok(productService.getProductByCode(code));
+    }
+
+    @GetMapping()
+    public ResponseEntity<Page<ProductDTO>> getProductsByName(
+            @RequestParam String name,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(productService.getProductDTOsByName(pageable, name));
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<Page<ProductDTO>> getProductDTOsByCategoryId(
+            @RequestParam Long categoryId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(productService.getProductDTOsByCategoryId(pageable, categoryId));
+    }
+
+    @GetMapping("/seller")
+    public ResponseEntity<Page<ProductDTO>> getProductsBySellerId(
+            @RequestParam Long sellerId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "12") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "true") boolean ascending) {
+
+        Sort sort = ascending ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return ResponseEntity.ok(productService.getProductDTOsBySellerId(pageable, sellerId));
+    }
 
     @DeleteMapping("deleteProduct/{id}")
     public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {

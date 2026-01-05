@@ -14,7 +14,7 @@ public class ProductDTO {
 
     public ProductDTO(Long id, String code, String name, String brand, EStatus status, String features, String description,
                       Integer quantity, Double marketPrice, Double discountPercent, Double discountAmount,
-                      Double sellingPrice, Long categoryId, Long sellerId, String imageUrl) {
+                      Double sellingPrice, Long categoryId, Long userId, String imageUrl) {
         this.id = id;
         this.code = code;
         this.name = name;
@@ -28,13 +28,13 @@ public class ProductDTO {
         this.discountAmount = discountAmount;
         this.sellingPrice = sellingPrice;
         this.categoryId = categoryId;
-        this.sellerId = sellerId;
+        this.sellerId = userId;
         this.imageUrl = imageUrl;
     }
 
     public ProductDTO(Long id, String name, String brand, String description,
                       Double marketPrice, Double discountPercent, Double discountAmount,
-                      Double sellingPrice, Long categoryId, Long sellerId, String imageUrl) {
+                      Double sellingPrice, Long categoryId, Long userId, String imageUrl) {
         this.id = id;
         this.name = name;
         this.brand = brand;
@@ -44,7 +44,7 @@ public class ProductDTO {
         this.discountAmount = discountAmount;
         this.sellingPrice = sellingPrice;
         this.categoryId = categoryId;
-        this.sellerId = sellerId;
+        this.sellerId = userId;
         this.imageUrl = imageUrl;
     }
 
