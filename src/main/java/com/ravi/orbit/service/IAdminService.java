@@ -1,6 +1,8 @@
 package com.ravi.orbit.service;
 
 import com.ravi.orbit.dto.UserDTO;
+import com.ravi.orbit.enums.ERole;
+import com.ravi.orbit.enums.EStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -10,10 +12,6 @@ public interface IAdminService {
 
     String deleteAdmin(Long id);
 
-    Page<UserDTO> getAllUsers(Pageable pageable);
-
-    Page<UserDTO> getAllSellers(Pageable pageable);
-
-    Page<UserDTO> getAllAdmins(Pageable pageable);
+    Page<UserDTO> getUsersByRoleAndStatus(ERole role, EStatus status, Pageable pageable);
 
 }
