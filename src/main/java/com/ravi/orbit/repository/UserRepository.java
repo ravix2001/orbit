@@ -23,16 +23,20 @@ public interface UserRepository extends JpaRepository <User, Long> {
     Page<UserDTO> getUsersByRoleAndStatus(ERole role, EStatus status, Pageable pageable);
 
     @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, " +
-            " u.phone, u.email, u.username, u.gender, u.dob, u.status, u.imageUrl, " +
+            " u.phone, u.email, u.username, u.gender, u.dob, r.role, u.status, u.imageUrl, " +
             " u.address, u.zipcode, u.state, u.countryCode ) " +
             " FROM User u " +
+            " LEFT JOIN UserRoles ur ON u.id = ur.userId " +
+            " LEFT JOIN Role r ON ur.roleId = r.id " +
             " WHERE u.id = :id ")
     Optional<UserDTO> getUserDTOById(Long id);
 
     @Query("SELECT NEW com.ravi.orbit.dto.UserDTO(u.id, u.firstName, u.middleName, u.lastName, " +
-            " u.phone, u.email, u.username, u.gender, u.dob, u.status, u.imageUrl, " +
+            " u.phone, u.email, u.username, u.gender, u.dob, r.role, u.status, u.imageUrl, " +
             " u.address, u.zipcode, u.state, u.countryCode ) " +
             " FROM User u " +
+            " LEFT JOIN UserRoles ur ON u.id = ur.userId " +
+            " LEFT JOIN Role r ON ur.roleId = r.id " +
             " WHERE u.username = :username ")
     Optional<UserDTO> getUserDTOByUsername(String username);
 

@@ -96,7 +96,7 @@ public class AuthServiceImpl implements IAuthService {
         return Map.of("accessToken", newAccessToken);
     }
 
-
+    @Override
     public Map<String, String> logout(String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         RefreshToken refreshToken = getRefreshToken(token);
